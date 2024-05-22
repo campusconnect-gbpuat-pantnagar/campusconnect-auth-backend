@@ -102,6 +102,41 @@ const userSchema = new mongoose.Schema<IUserDoc, IUserModel>(
     showOnBoarding: {
       type: Boolean,
     },
+
+    academicDetails: {
+      college: {
+        name: {
+          type: String,
+          required: true,
+        },
+        id: {
+          type: String,
+          required: true,
+        },
+      },
+      department: {
+        name: {
+          type: String,
+          required: true,
+        },
+        id: {
+          type: String,
+          required: true,
+        },
+      },
+      degreeProgram: {
+        name: {
+          type: String,
+          required: true,
+        },
+        id: {
+          type: String,
+          required: true,
+        },
+      },
+      batchYear: Number,
+      designation: String,
+    },
     showOnBoardingTour: {
       type: Number,
       default: 0,

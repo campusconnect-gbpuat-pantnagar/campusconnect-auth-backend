@@ -11,6 +11,12 @@ export class AuthRoute implements Route {
     this.initializeRoutes();
   }
   private initializeRoutes() {
-    this.router.get(`${this.path}/signup`, this.authController.signupHandler);
+    this.router.post(`${this.path}/signup`, this.authController.signupHandler);
+    this.router.post(`${this.path}/signin`, this.authController.signupHandler);
+    this.router.post(`${this.path}/logout`, this.authController.signupHandler);
+    this.router.post(`${this.path}/forgot-password`, this.authController.signupHandler);
+    this.router.post(`${this.path}/reset-password`, this.authController.signupHandler);
+    this.router.post(`${this.path}/verify-email`, this.authController.signupHandler);
+    this.router.post(`${this.path}/send-verification-email`, this.authController.signupHandler);
   }
 }

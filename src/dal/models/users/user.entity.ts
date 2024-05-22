@@ -20,6 +20,24 @@ export interface IUser {
     lastFailedAttempt: string;
   };
 
+  // academic information
+  academicDetails: {
+    college: {
+      name: string;
+      id: string;
+    };
+    department: {
+      name: string;
+      id: string;
+    };
+    degreeProgram: {
+      name: string;
+      id: string;
+    };
+    batchYear: number;
+    designation: string;
+  };
+
   // Account Status
   isDeleted?: boolean;
   isBlocked?: boolean;

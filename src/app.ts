@@ -10,6 +10,7 @@ import { getConfig } from '@/config';
 import { globalConstants } from '@/utils';
 import logger from '@/lib/logger';
 import { errorConverter, errorMiddleware } from '@/middlewares/error.middleware';
+import ExpressMongoSanitize from 'express-mongo-sanitize';
 
 export class App {
   public app: express.Application;
@@ -47,6 +48,7 @@ export class App {
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(xss());
     this.app.use(cookieParser());
+    this.app.use(ExpressMongoSanitize());
   }
 
   private initializeRoutes(routes: Route[]) {
