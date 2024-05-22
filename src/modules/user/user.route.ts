@@ -1,12 +1,12 @@
 import { Router } from 'express';
 import type { Route } from '../../interfaces/route.interface';
 import { ValidationPipe } from '../../middlewares/request-validation.middleware';
-import { AuthController } from './controllers/auth.controller';
+import { UserController } from './controllers/user.controller';
 
-export class AuthRoute implements Route {
-  public readonly path = '/auth';
+export class UserRoute implements Route {
+  public readonly path = '/users';
   public router = Router();
-  public authController = new AuthController();
+  public authController = new UserController();
   constructor() {
     this.initializeRoutes();
   }

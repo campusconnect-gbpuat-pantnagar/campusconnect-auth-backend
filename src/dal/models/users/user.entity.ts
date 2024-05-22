@@ -37,7 +37,7 @@ export interface IUser {
   }[];
 
   // User Role
-  role: string;
+  role?: string;
 
   // Onboarding
   showOnBoarding?: boolean;
