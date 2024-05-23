@@ -58,11 +58,10 @@ export class AuthService {
     await this._redisService1.set(`${REDIS_ENUM.USERNAME_AVAILABLE}`, `${username}`, JSON.stringify({ ...userBody }));
   }
   public async isUsernameAvailable(username: string) {
-    const user = (await this._redisService1.get(`${REDIS_ENUM.USERNAME_AVAILABLE}`, `${username}`)) as unknown as Pick<
-      NewRegisteredUser,
-      'gbpuatEmail' | 'gbpuatId'
-    >;
-    if (!user || !user.gbpuatEmail) {
+    const user = await this._redisService1.get(`${REDIS_ENUM.USERNAME_AVAILABLE}`, `${username}`);
+    const jsonUser = user && (JSON.parse(user) as unknown as Pick<NewRegisteredUser, 'gbpuatEmail' | 'gbpuatId'>);
+    console.log(user);
+    if (!jsonUser || !jsonUser.gbpuatEmail) {
       return true;
     }
 
