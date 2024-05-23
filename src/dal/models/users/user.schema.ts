@@ -4,6 +4,7 @@ import validator from 'validator';
 import toJSON from '@/dal/plugins/toJSON/toJSON';
 import bcrypt from 'bcryptjs';
 import { getConfig } from '@/config';
+import { boolean } from 'joi';
 const userSchema = new mongoose.Schema<IUserDoc, IUserModel>(
   {
     gbpuatId: {
@@ -87,9 +88,6 @@ const userSchema = new mongoose.Schema<IUserDoc, IUserModel>(
       type: String,
       default: null,
     },
-    otp: {
-      type: Number,
-    },
     failedLogin: {
       times: {
         type: Number,
@@ -97,9 +95,6 @@ const userSchema = new mongoose.Schema<IUserDoc, IUserModel>(
       lastFailedAttempt: {
         type: Date,
       },
-    },
-    showOnBoarding: {
-      type: Boolean,
     },
 
     academicDetails: {
@@ -139,6 +134,9 @@ const userSchema = new mongoose.Schema<IUserDoc, IUserModel>(
     showOnBoardingTour: {
       type: Number,
       default: 0,
+    },
+    showOnBoarding: {
+      type: Boolean,
     },
     role: {
       type: String,
@@ -199,15 +197,17 @@ userSchema.static(
  */
 userSchema.method('isPasswordMatch', async function (password: string): Promise<boolean> {
   const user = this;
-  const passwordWithSecret = (user.password + getConfig().ARGON_SECRET_PEPPER) as string;
-  return bcrypt.compare(passwordWithSecret, user.password);
+  const passwordWithSecret = (password + getConfig().ARGON_SECRET_PEPPER) as string;
+
+  return await bcrypt.compare(passwordWithSecret, user.password);
 });
 
 userSchema.pre('save', async function (next) {
   const user = this;
   if (user.isModified('password')) {
+    const salt = await bcrypt.genSalt(12);
     const passwordWithSecret = (user.password + getConfig().ARGON_SECRET_PEPPER) as string;
-    user.password = await bcrypt.hash(passwordWithSecret, 10);
+    user.password = await bcrypt.hash(passwordWithSecret, salt);
   }
   next();
 });

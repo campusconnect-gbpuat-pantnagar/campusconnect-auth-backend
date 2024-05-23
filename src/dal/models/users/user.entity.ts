@@ -14,7 +14,6 @@ export interface IUser {
 
   // Authentication and Security
   resetToken?: string;
-  otp?: number;
   failedLogin?: {
     times: number;
     lastFailedAttempt: string;
