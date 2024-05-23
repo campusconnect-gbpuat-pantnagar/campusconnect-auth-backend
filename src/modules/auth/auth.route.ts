@@ -4,8 +4,9 @@ import validate from '../../middlewares/validation.middleware';
 import { AuthController } from './controllers/auth.controller';
 import { registerDto } from './dtos/auth.register.dto';
 import { loginDto } from './dtos/auth.login.dto';
-import { sendVerificationEmailDto } from './dtos/auth.send-verification-email.dto';
+import { verifyEmailDto } from './dtos/auth.verify-email.dto';
 import { usernameDto } from './dtos/auth.username.dto';
+import { sendVerificationEmailDto } from './dtos/auth.send-verification-email.dto copy';
 
 export class AuthRoute implements Route {
   public readonly path = '/auth';
@@ -27,5 +28,6 @@ export class AuthRoute implements Route {
       validate(sendVerificationEmailDto),
       this.authController.sendVerificationEmail,
     );
+    this.router.post(`${this.path}/verify-email`, validate(verifyEmailDto), this.authController.verifyEmail);
   }
 }

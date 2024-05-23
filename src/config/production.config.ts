@@ -24,6 +24,7 @@ export const productionConfig: Config = {
   },
   allowedOrigins: allowedOrigins,
   ARGON_SECRET_PEPPER: String(process.env.ARGON_SECRET_PEPPER),
+  ARGON_OTP_SECRET_PEPPER: String(process.env.ARGON_OTP_SECRET_PEPPER),
 
   // jwt tokens
 

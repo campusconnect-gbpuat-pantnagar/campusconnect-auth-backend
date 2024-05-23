@@ -5,11 +5,10 @@ import logger from '@/lib/logger';
 import { AuthRoute } from './modules/auth/auth.route';
 import { connectMongoDB } from '@/infra/mongodb';
 import { HealthCheckRoute } from './modules/healthcheck/healthcheck.route';
-import redisClient from './infra/redis/dal.redis';
+import { RedisClient } from './infra/redis/dal.redis';
 const app = new App([new AuthRoute(), new HealthCheckRoute()]);
 let server: any;
 
-const redisInstance = redisClient;
 async function startServer() {
   connectMongoDB();
   server = app.listen();
@@ -37,7 +36,7 @@ process.on('unhandledRejection', unexpectedErrorHandler);
 
 process.on('SIGTERM', () => {
   logger.info('SIGTERM received');
-  redisInstance.quit();
+  RedisClient.quitAll();
   if (server) {
     server.close();
   }

@@ -64,4 +64,14 @@ export class AuthController extends Api {
       next(err);
     }
   };
+  public verifyEmail: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { gbpuatEmail, otp } = req.body;
+      console.log(gbpuatEmail, otp);
+      const user = await this._authService.verifyEmail(gbpuatEmail, otp);
+      this.send(res, { user }, `account verification completed successfully`);
+    } catch (err) {
+      next(err);
+    }
+  };
 }

@@ -23,6 +23,7 @@ export interface Config {
   allowedOrigins: Array<string> | undefined;
 
   ARGON_SECRET_PEPPER: string;
+  ARGON_OTP_SECRET_PEPPER: string;
 
   JWT_ACCESS_TOKEN_EXPIRATION: string;
   JWT_ACCESS_TOKEN_SECRET: string;

@@ -23,6 +23,7 @@ export const devConfig: Config = {
   allowedOrigins: allowedOrigins,
 
   ARGON_SECRET_PEPPER: String(process.env.ARGON_SECRET_PEPPER),
+  ARGON_OTP_SECRET_PEPPER: String(process.env.ARGON_OTP_SECRET_PEPPER),
   // jwt tokens
 
   JWT_ACCESS_TOKEN_EXPIRATION: String(process.env.JWT_ACCESS_TOKEN_EXPIRATION),
