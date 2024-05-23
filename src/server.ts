@@ -3,13 +3,15 @@ import mongoose from 'mongoose';
 import { getConfig } from './config';
 import logger from '@/lib/logger';
 import { AuthRoute } from './modules/auth/auth.route';
-import { connectMongoDB } from './infra/mongodb';
+import { connectMongoDB } from '@/infra/mongodb';
+import Redis from '@/infra/redis/dal.redis';
 const app = new App([new AuthRoute()]);
 let server: any;
 
-function startServer() {
+async function startServer() {
   connectMongoDB();
   server = app.listen();
+  await Redis.connect();
 }
 const exitHandler = () => {
   if (server) {
@@ -28,6 +30,9 @@ const unexpectedErrorHandler = (error: string) => {
 };
 
 startServer();
+Redis.on('error', (err) => {
+  logger.error('Redis error:', err);
+});
 process.on('uncaughtException', unexpectedErrorHandler);
 process.on('unhandledRejection', unexpectedErrorHandler);
 

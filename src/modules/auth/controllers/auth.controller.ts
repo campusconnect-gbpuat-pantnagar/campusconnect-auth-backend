@@ -34,4 +34,14 @@ export class AuthController extends Api {
       next(err);
     }
   };
+
+  public sendVerificationEmail: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { gbpuatEmail } = req.body;
+      const user = await this._authService.sendVerificationEmail(gbpuatEmail);
+      this.send(res, null, `Email Sent successfully to your mail ${user?.gbpuatEmail}`);
+    } catch (err) {
+      next(err);
+    }
+  };
 }

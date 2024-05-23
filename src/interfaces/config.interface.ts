@@ -1,8 +1,13 @@
 import { CorsOptions } from 'cors';
+import { number } from 'joi';
 
 export interface Config {
   env: string;
   DATABASE_URL: string;
+  REDIS_CACHE_DB_HOST: string;
+  REDIS_CACHE_DB_PORT: number;
+  REDIS_CACHE_DB_USER: string;
+  REDIS_CACHE_DB_PASS: string;
   server: {
     protocol: string;
     host: string;
