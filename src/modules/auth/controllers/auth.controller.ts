@@ -54,8 +54,12 @@ export class AuthController extends Api {
     try {
       const { username } = req.params;
       console.log(username);
-      // const user = await this._authService.sendVerificationEmail(gbpuatEmail);
-      this.send(res, null, `Email Sent  ${username}`);
+      const isUsernameAvailable = await this._authService.isUsernameAvailable(username);
+      this.send(
+        res,
+        { isUsernameAvailable },
+        isUsernameAvailable ? `${username} is available.` : `Username ${username} is not available.`,
+      );
     } catch (err) {
       next(err);
     }

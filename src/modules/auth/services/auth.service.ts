@@ -55,10 +55,17 @@ export class AuthService {
     return user;
   }
   public async addUsernameToRedis(username: string, userBody: Pick<NewRegisteredUser, 'gbpuatEmail' | 'gbpuatId'>) {
-    await this._redisService1.set(`${REDIS_ENUM.USERNAME_AVAILABLE}`, `${username}`, JSON.stringify({ userBody }));
+    await this._redisService1.set(`${REDIS_ENUM.USERNAME_AVAILABLE}`, `${username}`, JSON.stringify({ ...userBody }));
   }
   public async isUsernameAvailable(username: string) {
-    // const user = await this._redisService1.get(`${REDIS_ENUM.EMAIL_VERIFICATION}`);
-    // return user;
+    const user = (await this._redisService1.get(`${REDIS_ENUM.USERNAME_AVAILABLE}`, `${username}`)) as unknown as Pick<
+      NewRegisteredUser,
+      'gbpuatEmail' | 'gbpuatId'
+    >;
+    if (!user || !user.gbpuatEmail) {
+      return true;
+    }
+
+    return false;
   }
 }
