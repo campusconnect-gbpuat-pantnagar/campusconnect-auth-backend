@@ -1,10 +1,11 @@
 import mongoose from 'mongoose';
 import { IUser, IUserDoc, IUserModel } from './user.entity';
 import validator from 'validator';
-import toJSON from '@/dal/plugins/toJSON/toJSON';
+
 import bcrypt from 'bcryptjs';
 import { getConfig } from '@/config';
 import { boolean } from 'joi';
+import toJSON from '../../plugins/toJSON/toJSON';
 const userSchema = new mongoose.Schema<IUserDoc, IUserModel>(
   {
     gbpuatId: {

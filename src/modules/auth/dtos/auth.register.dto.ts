@@ -1,4 +1,4 @@
-import { NewRegisteredUser } from '@/dal/models/index';
+import { NewRegisteredUser } from '@/infra/mongodb/models/index';
 import { gbpuatEmail, password } from '@/helpers/validate/custom.validation';
 import Joi from 'joi';
 const registerBody: Record<keyof NewRegisteredUser, any> = {

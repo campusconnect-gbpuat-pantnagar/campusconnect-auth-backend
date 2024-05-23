@@ -24,7 +24,6 @@ const validate =
         // _original: error._original,
       }));
 
-      console.log(error);
       return next(new ValidationException(validationErrors, 'Validation error'));
     }
 

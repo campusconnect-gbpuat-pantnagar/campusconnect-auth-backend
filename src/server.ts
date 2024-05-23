@@ -3,14 +3,14 @@ import mongoose from 'mongoose';
 import { getConfig } from './config';
 import logger from '@/lib/logger';
 import { AuthRoute } from './modules/auth/auth.route';
+import { connectMongoDB } from './infra/mongodb';
 const app = new App([new AuthRoute()]);
 let server: any;
 
-mongoose.connect(getConfig().DATABASE_URL).then(() => {
-  logger.info('Connected to MongoDB');
+function startServer() {
+  connectMongoDB();
   server = app.listen();
-});
-
+}
 const exitHandler = () => {
   if (server) {
     server.close(() => {
@@ -27,6 +27,7 @@ const unexpectedErrorHandler = (error: string) => {
   exitHandler();
 };
 
+startServer();
 process.on('uncaughtException', unexpectedErrorHandler);
 process.on('unhandledRejection', unexpectedErrorHandler);
 

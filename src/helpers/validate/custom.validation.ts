@@ -12,7 +12,6 @@ export const password = (value: string, helpers: CustomHelpers) => {
     return helpers.message({ custom: 'Password must be at least 8 characters' });
   }
 
-  console.log(value);
   if (!value.match(/[a-z]/) || !value.match(/[A-Z]/) || !value.match(/\d/) || !value.match(/[@$!%*?&]/)) {
     return helpers.message({
       custom:

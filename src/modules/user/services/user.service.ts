@@ -1,6 +1,6 @@
 import { getConfig } from '@/config';
-import { IUserDoc, NewCreatedUser, NewRegisteredUser } from '@/dal/models';
-import User from '@/dal/models/users/user.schema';
+import { IUserDoc, NewCreatedUser, NewRegisteredUser } from '@/infra/mongodb/models';
+import User from '@/infra/mongodb/models/users/user.schema';
 import { HttpStatusCode } from '@/enums';
 import ApiError from '@/exceptions/http.exception';
 import mongoose from 'mongoose';
