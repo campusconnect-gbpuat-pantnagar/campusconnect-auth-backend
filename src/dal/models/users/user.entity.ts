@@ -71,5 +71,22 @@ export interface IUserModel extends Model<IUserDoc> {
   isEmailTaken(email: string, excludeUserId?: mongoose.Types.ObjectId): Promise<boolean>;
 }
 export type UpdateUserBody = Partial<IUser>;
-export type NewRegisteredUser = Omit<IUser, 'role' | 'isEmailVerified'>;
+export type NewRegisteredUser = Omit<
+  IUser,
+  | 'role'
+  | 'isEmailVerified'
+  | 'profilePicture'
+  | 'bio'
+  | 'resetToken'
+  | 'otp'
+  | 'failedLogin'
+  | 'isDeleted'
+  | 'isBlocked'
+  | 'lastActive'
+  | 'receivedConnections'
+  | 'sentConnections'
+  | 'connectionLists'
+  | 'showOnBoarding'
+  | 'showOnBoardingTour'
+>;
 export type NewCreatedUser = Omit<IUser, 'isEmailVerified'>;

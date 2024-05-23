@@ -28,10 +28,8 @@ export const errorMiddleware = async (error: ApiError, req: Request, res: Respon
       const message: validationError[] = [];
       const statusCode = 400;
       for (const err of error.errors) {
-        message.push({
-          field: err.property,
-          error: Object.values(err.constraints ?? {}).join('; '),
-        });
+        const field = err.path.split('.').pop();
+        message.push({ field, error: err.message });
       }
       logger.error(`[${req.method}] ${req.path} || StatusCode:: ${statusCode}, Message:: ${message}`);
 

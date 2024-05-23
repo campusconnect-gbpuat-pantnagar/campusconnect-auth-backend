@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import type { Route } from '../../interfaces/route.interface';
-import { ValidationPipe } from '../../middlewares/request-validation.middleware';
 import { UserController } from './controllers/user.controller';
 
 export class UserRoute implements Route {
@@ -11,6 +10,6 @@ export class UserRoute implements Route {
     this.initializeRoutes();
   }
   private initializeRoutes() {
-    this.router.get(`${this.path}/signup`, this.authController.signupHandler);
+    // this.router.get(`${this.path}/signup`, this.authController.signupHandler);
   }
 }

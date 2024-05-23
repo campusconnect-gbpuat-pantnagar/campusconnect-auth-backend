@@ -1,6 +1,5 @@
 import cors from 'cors';
 import express from 'express';
-import morgan from 'morgan';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import { Config, Route } from '@/interfaces';
@@ -11,6 +10,7 @@ import { globalConstants } from '@/utils';
 import logger from '@/lib/logger';
 import { errorConverter, errorMiddleware } from '@/middlewares/error.middleware';
 import ExpressMongoSanitize from 'express-mongo-sanitize';
+import morgan from './lib/morgan';
 
 export class App {
   public app: express.Application;
@@ -35,7 +35,10 @@ export class App {
   }
 
   private initializeMiddleware() {
-    this.app.use(morgan(this.config.log.format));
+    if (getConfig().env !== 'test') {
+      this.app.use(morgan.successHandler);
+      this.app.use(morgan.errorHandler);
+    }
     this.app.use(helmet());
 
     this.app.use(
