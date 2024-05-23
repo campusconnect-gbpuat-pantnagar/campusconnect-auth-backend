@@ -17,6 +17,12 @@ export class AuthController extends Api {
   public registerUser: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const user = await this._userService.registerUser(req.body);
+      if (user.username) {
+        await this._authService.addUsernameToRedis(user.username, {
+          gbpuatId: user.gbpuatId,
+          gbpuatEmail: user.gbpuatEmail,
+        });
+      }
       this.send(res, { user }, 'user created successfully');
     } catch (err) {
       next(err);
@@ -40,6 +46,16 @@ export class AuthController extends Api {
       const { gbpuatEmail } = req.body;
       const user = await this._authService.sendVerificationEmail(gbpuatEmail);
       this.send(res, null, `Email Sent successfully to your mail ${user?.gbpuatEmail}`);
+    } catch (err) {
+      next(err);
+    }
+  };
+  public checkUsernameAvailability: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { username } = req.params;
+      console.log(username);
+      // const user = await this._authService.sendVerificationEmail(gbpuatEmail);
+      this.send(res, null, `Email Sent  ${username}`);
     } catch (err) {
       next(err);
     }

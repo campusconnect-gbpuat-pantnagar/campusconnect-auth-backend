@@ -1,28 +1,24 @@
-import redisClient from './dal.redis';
-import { RedisEntityInterface } from './redis.entity';
+import { RedisRepositoryInterface } from './redis.interface';
+import { Redis } from 'ioredis';
+export class RedisService implements RedisRepositoryInterface {
+  private _redisClient: Redis;
+  constructor(redisClient: Redis) {
+    this._redisClient = redisClient;
+  }
 
-async function get(prefix: string, key: string): Promise<string | null> {
-  return redisClient.get(`${prefix}:${key}`);
-}
+  async get(prefix: string, key: string): Promise<string | null> {
+    return this._redisClient.get(`${prefix}:${key}`);
+  }
 
-async function set(prefix: string, key: string, value: string): Promise<void> {
-  await redisClient.set(`${prefix}:${key}`, value);
-}
+  async set(prefix: string, key: string, value: string): Promise<void> {
+    this._redisClient.set(`${prefix}:${key}`, value);
+  }
 
-async function deleteOne(prefix: string, key: string) {
-  await redisClient.del(`${prefix}:${key}`);
-}
+  async delete(prefix: string, key: string): Promise<void> {
+    this._redisClient.del(`${prefix}:${key}`);
+  }
 
-async function deleteAll(prefix: string, pattern: string): Promise<void> {
-  const client = redisClient;
-  const keys = await client.keys(`${prefix}:${pattern}`);
-  for (const key of keys) {
-    await client.del(key);
+  async setWithExpiry(prefix: string, key: string, value: string, expiry: number): Promise<void> {
+    this._redisClient.set(`${prefix}:${key}`, value, 'EX', expiry);
   }
 }
-
-async function setWithExpiry(prefix: string, key: string, value: string, expiry: number): Promise<void> {
-  await redisClient.set(`${prefix}:${key}`, value, 'EX', expiry);
-}
-
-export { setWithExpiry, set, deleteAll, deleteOne, get };

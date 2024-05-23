@@ -4,6 +4,9 @@ import { number } from 'joi';
 export interface Config {
   env: string;
   DATABASE_URL: string;
+
+  CAMPUSCONNECT_REDIS1_URL: string;
+  CAMPUSCONNECT_REDIS2_URL: string;
   REDIS_CACHE_DB_HOST: string;
   REDIS_CACHE_DB_PORT: number;
   REDIS_CACHE_DB_USER: string;
