@@ -77,7 +77,6 @@ const userSchema = new mongoose.Schema<IUserDoc, IUserModel>(
     },
     profilePicture: {
       type: String,
-      required: true,
       default: null,
     },
     bio: {
@@ -109,7 +108,7 @@ const userSchema = new mongoose.Schema<IUserDoc, IUserModel>(
           type: String,
           required: true,
         },
-        id: {
+        collegeId: {
           type: String,
           required: true,
         },
@@ -119,7 +118,7 @@ const userSchema = new mongoose.Schema<IUserDoc, IUserModel>(
           type: String,
           required: true,
         },
-        id: {
+        departmentId: {
           type: String,
           required: true,
         },
@@ -129,7 +128,7 @@ const userSchema = new mongoose.Schema<IUserDoc, IUserModel>(
           type: String,
           required: true,
         },
-        id: {
+        degreeProgramId: {
           type: String,
           required: true,
         },

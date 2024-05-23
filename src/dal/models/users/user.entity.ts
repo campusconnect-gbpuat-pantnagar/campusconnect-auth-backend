@@ -24,15 +24,15 @@ export interface IUser {
   academicDetails: {
     college: {
       name: string;
-      id: string;
+      collegeId: string;
     };
     department: {
       name: string;
-      id: string;
+      departmentId: string;
     };
     degreeProgram: {
       name: string;
-      id: string;
+      degreeProgramId: string;
     };
     batchYear: number;
     designation: string;

@@ -11,15 +11,15 @@ const registerBody: Record<keyof NewRegisteredUser, any> = {
   academicDetails: Joi.object({
     college: Joi.object({
       name: Joi.string().required(),
-      id: Joi.string().required(),
+      collegeId: Joi.string().required(),
     }).required(),
     department: Joi.object({
       name: Joi.string().required(),
-      id: Joi.string().required(),
+      departmentId: Joi.string().required(),
     }).required(),
     degreeProgram: Joi.object({
       name: Joi.string().required(),
-      id: Joi.string().required(),
+      degreeProgramId: Joi.string().required(),
     }).required(),
     batchYear: Joi.number().required(),
     designation: Joi.string().required(),

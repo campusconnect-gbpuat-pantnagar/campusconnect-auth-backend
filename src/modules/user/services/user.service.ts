@@ -15,7 +15,7 @@ export class UserService {
    */
   public async createUser(userBody: NewCreatedUser): Promise<IUserDoc> {
     if (await this._user.isEmailTaken(userBody.gbpuatEmail)) {
-      throw new ApiError(HttpStatusCode.BAD_REQUEST, 'Email already taken');
+      throw new ApiError(HttpStatusCode.BAD_REQUEST, 'email is already taken');
     }
     return this._user.create(userBody);
   }
