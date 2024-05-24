@@ -7,12 +7,15 @@ import { AuthService } from '../services/auth.service';
 import { HttpStatusCode } from '@/enums';
 import ApiError from '@/exceptions/http.exception';
 import { addDays, format } from 'date-fns';
+import { CryptoService } from '@/helpers/crypto.service';
 
 export class AuthController extends Api {
   private readonly _userService: UserService;
   private readonly _authService: AuthService;
+
   constructor() {
     super();
+
     this._userService = new UserService();
     this._authService = new AuthService();
   }
@@ -115,7 +118,39 @@ export class AuthController extends Api {
 
       // if  verified then send tokens
       // ✅ TODO: Implement tokens functionality
-      this.send(res, { user }, 'user login successfully');
+      const { access_token, access_token_expires_at, refresh_token, refresh_token_expires_at } =
+        await this._authService.getTokens(user);
+
+      res.cookie('access_token', refresh_token, {
+        secure: true,
+        httpOnly: true,
+        sameSite: 'none',
+        maxAge: getConfig().JWT_ACCESS_TOKEN_COOKIE_EXPIRATION,
+      });
+
+      res.cookie('access_token_expires_at', access_token_expires_at, {
+        secure: true,
+        httpOnly: true,
+        sameSite: 'none',
+        maxAge: getConfig().JWT_ACCESS_TOKEN_COOKIE_EXPIRATION,
+      });
+
+      res.cookie('refresh_token', refresh_token, {
+        secure: true,
+        httpOnly: true,
+        sameSite: 'none',
+        maxAge: getConfig().JWT_REFRESH_TOKEN_COOKIE_EXPIRATION,
+      });
+
+      res.cookie('refresh_token_expires_at', refresh_token_expires_at, {
+        secure: true,
+        httpOnly: true,
+        sameSite: 'none',
+        maxAge: getConfig().JWT_REFRESH_TOKEN_COOKIE_EXPIRATION,
+      });
+
+      const tokens = { access_token, access_token_expires_at };
+      this.send(res, { user, tokens }, 'user login successfully');
     } catch (err) {
       next(err);
     }
@@ -147,9 +182,43 @@ export class AuthController extends Api {
   public verifyEmail: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { gbpuatEmail, otp } = req.body;
-      console.log(gbpuatEmail, otp);
+      // console.log(gbpuatEmail, otp);
       const user = await this._authService.verifyEmail(gbpuatEmail, otp);
-      this.send(res, { user }, `account verification completed successfully`);
+      // if  verified then send tokens
+      // ✅ TODO: Implement tokens functionality
+      const { access_token, access_token_expires_at, refresh_token, refresh_token_expires_at } =
+        await this._authService.getTokens(user!);
+
+      res.cookie('access_token', refresh_token, {
+        secure: true,
+        httpOnly: true,
+        sameSite: 'none',
+        maxAge: getConfig().JWT_ACCESS_TOKEN_COOKIE_EXPIRATION,
+      });
+
+      res.cookie('access_token_expires_at', access_token_expires_at, {
+        secure: true,
+        httpOnly: true,
+        sameSite: 'none',
+        maxAge: getConfig().JWT_ACCESS_TOKEN_COOKIE_EXPIRATION,
+      });
+
+      res.cookie('refresh_token', refresh_token, {
+        secure: true,
+        httpOnly: true,
+        sameSite: 'none',
+        maxAge: getConfig().JWT_REFRESH_TOKEN_COOKIE_EXPIRATION,
+      });
+
+      res.cookie('refresh_token_expires_at', refresh_token_expires_at, {
+        secure: true,
+        httpOnly: true,
+        sameSite: 'none',
+        maxAge: getConfig().JWT_REFRESH_TOKEN_COOKIE_EXPIRATION,
+      });
+
+      const tokens = { access_token, access_token_expires_at };
+      this.send(res, { user, tokens }, `account verification completed successfully`);
     } catch (err) {
       next(err);
     }

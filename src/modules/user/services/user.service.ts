@@ -3,7 +3,7 @@ import { IUserDoc, NewCreatedUser, NewRegisteredUser } from '@/infra/mongodb/mod
 import User from '@/infra/mongodb/models/users/user.schema';
 import { HttpStatusCode } from '@/enums';
 import ApiError from '@/exceptions/http.exception';
-import mongoose from 'mongoose';
+import mongoose, { FilterQuery, UpdateQuery } from 'mongoose';
 import { RedisService } from '@/infra/redis/redis.service';
 import { redisClient1 } from '@/infra/redis/redis-clients';
 import { REDIS_ENUM } from '@/utils/redis.constants';
@@ -70,6 +70,22 @@ export class UserService {
    */
   public async getUserByGbpuatEmail(gbpuatEmail: string): Promise<IUserDoc | null> {
     return this._user.findOne({ gbpuatEmail });
+  }
+  /**
+   * update User by gbpuatEmail
+   * @param {filter}
+   * @param {update}
+   * @returns {Promise<IUserDoc | null>}
+   */
+  public async updateUserByGbpuatEmail(
+    filter: FilterQuery<IUserDoc>,
+    update: UpdateQuery<IUserDoc>,
+  ): Promise<IUserDoc | null> {
+    return this._user.findOneAndUpdate(
+      filter,
+      { $set: update },
+      { new: true }, // This option returns the updated document
+    );
   }
 
   /**

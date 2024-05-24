@@ -6,7 +6,7 @@ import ApiError from '@/exceptions/http.exception';
 import { UserService } from '@/modules/user/services/user.service';
 import mongoose from 'mongoose';
 import { REDIS_ENUM, REDIS_TTL_ENUM } from '@/utils/redis.constants';
-import { CryptoService } from '@/helpers/crypto.service';
+import { CryptoService, JwtPayloadInterface } from '@/helpers/crypto.service';
 import { RedisService } from '@/infra/redis/redis.service';
 import { redisClient1, redisClient2 } from '@/infra/redis/redis-clients';
 import { differenceInMinutes, parseISO } from 'date-fns';
@@ -116,7 +116,8 @@ export class AuthService {
       throw new ApiError(HttpStatusCode.BAD_REQUEST, 'Invalid OTP (One time password)');
     }
 
-    const user = await this._userService.getUserByGbpuatEmail(gbpuatEmail);
+    const user = await this._userService.updateUserByGbpuatEmail({ gbpuatEmail }, { isEmailVerified: true });
+    console.log(user);
     return user;
   }
 
@@ -159,5 +160,24 @@ export class AuthService {
     }
     await this._userService.updateFailedAttempts(user.id, times, now);
     return times;
+  }
+
+  public async getTokens(user: JwtPayloadInterface) {
+    const access_token = await this._cryptoService.generateAccessToken(user);
+    const refresh_token = await this._cryptoService.generateRefreshToken(user);
+
+    // console.log('access_token', access_token);
+    // console.log('\nrefresh_token', refresh_token);
+    const refresh_token_expiration = getConfig().JWT_REFRESH_TOKEN_COOKIE_EXPIRATION;
+    const acess_token_expiration = getConfig().JWT_ACCESS_TOKEN_COOKIE_EXPIRATION;
+    console.log(refresh_token_expiration, acess_token_expiration);
+    const access_token_expires_at = new Date(Date.now() + Number(acess_token_expiration));
+    const refresh_token_expires_at = new Date(Date.now() + Number(refresh_token_expiration));
+    return {
+      access_token,
+      access_token_expires_at,
+      refresh_token,
+      refresh_token_expires_at,
+    };
   }
 }

@@ -11,6 +11,9 @@ const app = new App([new AuthRoute(), new HealthCheckRoute(), new UserRoute()]);
 let server: any;
 
 async function startServer() {
+  if (getConfig().env) {
+    logger.debug('Config Module Initialized');
+  }
   connectMongoDB();
   server = app.listen();
 }
