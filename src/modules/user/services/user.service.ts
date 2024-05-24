@@ -88,4 +88,26 @@ export class UserService {
 
     return updateUserLastActive;
   }
+
+  /**
+   * Update the User updateFailed login  Attempts in the database
+   * @param {string} userId
+   * @returns {Promise<IUserDoc | null>}
+   */
+  public async updateFailedAttempts(
+    userId: mongoose.Types.ObjectId,
+    times: number,
+    lastFailedAttempt: Date,
+  ): Promise<IUserDoc | null> {
+    const updateUserLastActive = await this._user.findByIdAndUpdate(userId, {
+      $set: {
+        failedLogin: {
+          times,
+          lastFailedAttempt: lastFailedAttempt,
+        },
+      },
+    });
+
+    return updateUserLastActive;
+  }
 }

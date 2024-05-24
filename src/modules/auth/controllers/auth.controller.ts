@@ -5,6 +5,8 @@ import Api from '@/lib/api.response';
 import { UserService } from '@/modules/user/services/user.service';
 import { AuthService } from '../services/auth.service';
 import { HttpStatusCode } from '@/enums';
+import ApiError from '@/exceptions/http.exception';
+import { addDays, format } from 'date-fns';
 
 export class AuthController extends Api {
   private readonly _userService: UserService;
@@ -30,11 +32,45 @@ export class AuthController extends Api {
       next(err);
     }
   };
+
   public loginUser: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { username, password } = req.body;
       const user = await this._authService.loginUserWithUsernameAndPassword(username, password);
-      // ✅ TODO : Implementation for  temporary blocked user  -> your account will be unblocked shortly.
+
+      // ✅  Handling for user which has deleted his account ->  move user to reopen-account page for consent -> if User
+      if (user.isDeleted) {
+        // Calculate the account deletion date
+        const accountDeletedDate = addDays(new Date(user.lastActive), 30);
+
+        // Format the date as "Month date, year"
+        const formattedDate = format(accountDeletedDate, 'MMMM d, yyyy');
+
+        return this.send(
+          res,
+          {
+            user: {
+              isDeleted: user.isDeleted,
+            },
+          },
+          `Your requested to delete ${user.username}. If you want to keep it, you have until ${formattedDate} to let us know. Otherwise, all your information will be deleted.`,
+        );
+      }
+
+      // ✅  Implementation for  permanent blocked user  -> Your Account is Blocked contact admin.
+      if (user.isPermanentBlocked) {
+        return this.send(
+          res,
+          {
+            user: {
+              isPermanentBlocked: user.isPermanentBlocked,
+            },
+          },
+          'Your account is permanently blocked. Please contact the admin for assistance.',
+        );
+      }
+
+      // ✅  Implementation for  temporary blocked user  -> your account will be unblocked shortly.
       if (user.isTemporaryBlocked) {
         const lastActiveTime = new Date(user.lastActive).getTime();
         const sixHoursInMilliseconds = 6 * 60 * 60 * 1000;
@@ -56,25 +92,27 @@ export class AuthController extends Api {
           `Your account will be unblocked in approximately ${remainingHours} hour(s), ${remainingMinutes} minute(s), and ${remainingSeconds} second(s).`,
         );
       }
-
-      // ✅ TODO : Implementation for  permanent blocked user  -> Your Account is Blocked contact admin.
-      if (user.isPermanentBlocked) {
+      // // ✅ TODO : Handling maximum login attempts
+      if (this._authService.isAccountBlocked(user) && user.failedLogin) {
+        const blockedMinutesLeft = this._authService.getBlockedMinutesLeft(user.failedLogin.lastFailedAttempt);
+        throw new ApiError(
+          HttpStatusCode.UNAUTHORIZED,
+          `Account blocked, Please try again after ${blockedMinutesLeft} minutes`,
+        );
+      }
+      // ✅  Handling if email is not verified
+      if (!user.isEmailVerified) {
         return this.send(
           res,
           {
             user: {
-              isPermanentBlocked: user.isPermanentBlocked,
+              isEmailVerified: user.isEmailVerified,
             },
           },
-          'Your account is permanently blocked. Please contact the admin for assistance.',
+          `Please verify your email ${user.gbpuatEmail}`,
         );
       }
 
-      // ✅ TODO : Handling maximum login attempts
-      // ✅ TODO : Handling for user which has deleted his account ->  move user to reopen-account page for consent -> if User
-      // ✅ TODO Handling if email is not verified
-
-      // If gbpuatEmail is not verified then send them an email
       // if  verified then send tokens
       // ✅ TODO: Implement tokens functionality
       this.send(res, { user }, 'user login successfully');
