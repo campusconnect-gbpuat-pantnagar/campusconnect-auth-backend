@@ -69,11 +69,19 @@ const userSchema = new mongoose.Schema<IUserDoc, IUserModel>(
       required: true,
       default: false,
     },
-    isBlocked: {
+
+    isTemporaryBlocked: {
       type: Boolean,
       required: true,
       default: false,
     },
+
+    isPermanentBlocked: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+
     isDeleted: {
       type: Boolean,
       required: true,

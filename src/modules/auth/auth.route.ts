@@ -7,6 +7,7 @@ import { loginDto } from './dtos/auth.login.dto';
 import { verifyEmailDto } from './dtos/auth.verify-email.dto';
 import { usernameDto } from './dtos/auth.username.dto';
 import { sendVerificationEmailDto } from './dtos/auth.send-verification-email.dto copy';
+import logger from '@/lib/logger';
 
 export class AuthRoute implements Route {
   public readonly path = '/auth';
@@ -14,6 +15,7 @@ export class AuthRoute implements Route {
   public authController = new AuthController();
   constructor() {
     this.initializeRoutes();
+    logger.debug('Auth Module initialized');
   }
   private initializeRoutes() {
     this.router.get(

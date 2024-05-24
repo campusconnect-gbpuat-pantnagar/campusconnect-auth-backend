@@ -4,10 +4,17 @@ import User from '@/infra/mongodb/models/users/user.schema';
 import { HttpStatusCode } from '@/enums';
 import ApiError from '@/exceptions/http.exception';
 import mongoose from 'mongoose';
+import { RedisService } from '@/infra/redis/redis.service';
+import { redisClient1 } from '@/infra/redis/redis-clients';
+import { REDIS_ENUM } from '@/utils/redis.constants';
 
 export class UserService {
   private _user = User;
-  constructor() {}
+  private readonly _redisService1: RedisService;
+  constructor() {
+    this._redisService1 = new RedisService(redisClient1);
+  }
+
   /**
    * Create a user
    * @param {NewCreatedUser} userBody
@@ -63,5 +70,22 @@ export class UserService {
    */
   public async getUserByGbpuatEmail(gbpuatEmail: string): Promise<IUserDoc | null> {
     return this._user.findOne({ gbpuatEmail });
+  }
+
+  /**
+   * Update the User last Active timestamp in the database
+   * @param {string} userId
+   * @returns {Promise<IUserDoc | null>}
+   */
+  public async updateUserLastActive(userId: mongoose.Types.ObjectId): Promise<IUserDoc | null> {
+    const user = await this.getUserById(userId);
+    if (!user) {
+      throw new ApiError(HttpStatusCode.NOT_FOUND, 'User not found');
+    }
+    const updateUserLastActive = await this._user.findByIdAndUpdate(userId, {
+      $set: { lastActive: new Date() },
+    });
+
+    return updateUserLastActive;
   }
 }

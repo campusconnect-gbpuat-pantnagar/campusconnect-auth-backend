@@ -34,6 +34,46 @@ export class AuthController extends Api {
     try {
       const { username, password } = req.body;
       const user = await this._authService.loginUserWithUsernameAndPassword(username, password);
+      // ✅ TODO : Implementation for  temporary blocked user  -> your account will be unblocked shortly.
+      if (user.isTemporaryBlocked) {
+        const lastActiveTime = new Date(user.lastActive).getTime();
+        const sixHoursInMilliseconds = 6 * 60 * 60 * 1000;
+        const unblockTime = lastActiveTime + sixHoursInMilliseconds;
+        const currentTime = new Date().getTime();
+        const remainingTime = unblockTime - currentTime;
+
+        const remainingHours = Math.floor(remainingTime / (60 * 60 * 1000));
+        const remainingMinutes = Math.floor((remainingTime % (60 * 60 * 1000)) / (60 * 1000));
+        const remainingSeconds = Math.floor((remainingTime % (60 * 1000)) / 1000);
+
+        return this.send(
+          res,
+          {
+            user: {
+              isTemporaryBlocked: user.isTemporaryBlocked,
+            },
+          },
+          `Your account will be unblocked in approximately ${remainingHours} hour(s), ${remainingMinutes} minute(s), and ${remainingSeconds} second(s).`,
+        );
+      }
+
+      // ✅ TODO : Implementation for  permanent blocked user  -> Your Account is Blocked contact admin.
+      if (user.isPermanentBlocked) {
+        return this.send(
+          res,
+          {
+            user: {
+              isPermanentBlocked: user.isPermanentBlocked,
+            },
+          },
+          'Your account is permanently blocked. Please contact the admin for assistance.',
+        );
+      }
+
+      // ✅ TODO : Handling maximum login attempts
+      // ✅ TODO : Handling for user which has deleted his account ->  move user to reopen-account page for consent -> if User
+      // ✅ TODO Handling if email is not verified
+
       // If gbpuatEmail is not verified then send them an email
       // if  verified then send tokens
       // ✅ TODO: Implement tokens functionality

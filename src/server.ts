@@ -6,7 +6,8 @@ import { AuthRoute } from './modules/auth/auth.route';
 import { connectMongoDB } from '@/infra/mongodb';
 import { HealthCheckRoute } from './modules/healthcheck/healthcheck.route';
 import { RedisClient } from './infra/redis/dal.redis';
-const app = new App([new AuthRoute(), new HealthCheckRoute()]);
+import { UserRoute } from './modules/user/user.route';
+const app = new App([new AuthRoute(), new HealthCheckRoute(), new UserRoute()]);
 let server: any;
 
 async function startServer() {
