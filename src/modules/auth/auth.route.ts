@@ -16,7 +16,7 @@ export class AuthRoute implements Route {
     this.initializeRoutes();
   }
   private initializeRoutes() {
-    this.router.post(
+    this.router.get(
       `${this.path}/check-username/:username`,
       validate(usernameDto),
       this.authController.checkUsernameAvailability,

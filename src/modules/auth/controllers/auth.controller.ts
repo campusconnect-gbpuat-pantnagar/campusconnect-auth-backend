@@ -4,6 +4,7 @@ import { getConfig } from '@/config';
 import Api from '@/lib/api.response';
 import { UserService } from '@/modules/user/services/user.service';
 import { AuthService } from '../services/auth.service';
+import { HttpStatusCode } from '@/enums';
 
 export class AuthController extends Api {
   private readonly _userService: UserService;
@@ -23,7 +24,8 @@ export class AuthController extends Api {
           gbpuatEmail: user.gbpuatEmail,
         });
       }
-      this.send(res, { user }, 'user created successfully');
+      // ✅ TODO: Implement  for sending the email notification  for verification of user email
+      this.send(res, { user }, 'user created successfully', HttpStatusCode.CREATED);
     } catch (err) {
       next(err);
     }
@@ -35,7 +37,7 @@ export class AuthController extends Api {
       // If gbpuatEmail is not verified then send them an email
       // if  verified then send tokens
       // ✅ TODO: Implement tokens functionality
-      this.send(res, { user }, 'user created successfully');
+      this.send(res, { user }, 'user login successfully');
     } catch (err) {
       next(err);
     }

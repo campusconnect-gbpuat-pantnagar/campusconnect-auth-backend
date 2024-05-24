@@ -1,8 +1,8 @@
 import { NewRegisteredUser } from '@/infra/mongodb/models/index';
-import { gbpuatEmail, password } from '@/helpers/validate/custom.validation';
+import { gbpuatEmail, password, username } from '@/helpers/validate/custom.validation';
 import Joi from 'joi';
 export const usernameDto = {
   params: {
-    username: Joi.string().required(),
+    username: Joi.string().required().custom(username),
   },
 };

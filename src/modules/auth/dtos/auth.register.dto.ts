@@ -1,10 +1,10 @@
 import { NewRegisteredUser } from '@/infra/mongodb/models/index';
-import { gbpuatEmail, password } from '@/helpers/validate/custom.validation';
+import { gbpuatEmail, password, username } from '@/helpers/validate/custom.validation';
 import Joi from 'joi';
 const registerBody: Record<keyof NewRegisteredUser, any> = {
   gbpuatId: Joi.number().required(),
   gbpuatEmail: Joi.string().required().custom(gbpuatEmail),
-  username: Joi.string().required(),
+  username: Joi.string().required().custom(username),
   password: Joi.string().required().custom(password),
   firstName: Joi.string().required(),
   lastName: Joi.string().optional(),

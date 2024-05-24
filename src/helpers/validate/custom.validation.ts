@@ -32,3 +32,13 @@ export const gbpuatEmail = (value: string, helpers: CustomHelpers) => {
 
   return value;
 };
+export const username = (value: string, helpers: CustomHelpers) => {
+  const usernameRegex = /^[a-zA-Z0-9_]+$/;
+  if (!usernameRegex.test(value)) {
+    return helpers.message({
+      custom: 'Username can only contain alphanumeric characters and underscores',
+    });
+  }
+
+  return value;
+};

@@ -19,6 +19,12 @@ const userSchema = new mongoose.Schema<IUserDoc, IUserModel>(
       required: true,
       trim: true,
       unique: true,
+      validate(value: string) {
+        const usernameRegex = /^[a-zA-Z0-9_]+$/;
+        if (!usernameRegex.test(value)) {
+          throw new Error('Username can only contain alphanumeric characters and underscores');
+        }
+      },
     },
 
     gbpuatEmail: {
@@ -141,7 +147,7 @@ const userSchema = new mongoose.Schema<IUserDoc, IUserModel>(
     },
     role: {
       type: String,
-      enum: ['student', 'faculty', 'admin'],
+      enum: ['student', 'faculty', 'admin', 'moderator'],
       required: true,
       default: 'student',
     },
