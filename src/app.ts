@@ -11,6 +11,8 @@ import logger from '@/lib/logger';
 import { errorConverter, errorMiddleware } from '@/middlewares/error.middleware';
 import ExpressMongoSanitize from 'express-mongo-sanitize';
 import morgan from './lib/morgan';
+import { checkQueueReadiness, EMAIL_AUTH_NOTIFICATION_QUEUE } from './queues';
+import { bullboardServerAdapter } from './queues/bull-board';
 
 export class App {
   public app: express.Application;
@@ -29,6 +31,8 @@ export class App {
     this.protocol = this.config.server.protocol;
     this.initializeMiddleware();
     this.initializeRoutes(routes);
+    this.initializeQueues();
+    this.initializeAdminPanel();
     this.initializeRouteFallback();
     this.initializeErrorHandling();
     this.disableSettings();
@@ -74,10 +78,23 @@ export class App {
       });
     });
   }
+  private initializeAdminPanel() {
+    // admin only things
+    this.app.use('/api/v1/bullboard', bullboardServerAdapter());
+  }
 
   private initializeErrorHandling() {
     this.app.use(errorConverter);
     this.app.use(errorMiddleware);
+  }
+
+  private async initializeQueues() {
+    try {
+      await Promise.all([checkQueueReadiness(EMAIL_AUTH_NOTIFICATION_QUEUE)]);
+    } catch (error) {
+      logger.error('Error initializing queues:', error);
+      process.exit(1);
+    }
   }
 
   public listen() {

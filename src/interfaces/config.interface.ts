@@ -7,10 +7,10 @@ export interface Config {
 
   CAMPUSCONNECT_REDIS1_URL: string;
   CAMPUSCONNECT_REDIS2_URL: string;
-  REDIS_CACHE_DB_HOST: string;
-  REDIS_CACHE_DB_PORT: number;
-  REDIS_CACHE_DB_USER: string;
-  REDIS_CACHE_DB_PASS: string;
+  REDIS_AUTH_NOTIFICATION_HOST: string;
+  REDIS_AUTH_NOTIFICATION_PORT: number;
+  REDIS_AUTH_NOTIFICATION_USER: string;
+  REDIS_AUTH_NOTIFICATION_PASS: string;
   server: {
     protocol: string;
     host: string;

@@ -10,6 +10,8 @@ import { CryptoService, JwtPayloadInterface } from '@/helpers/crypto.service';
 import { RedisService } from '@/infra/redis/redis.service';
 import { redisClient1, redisClient2 } from '@/infra/redis/redis-clients';
 import { differenceInMinutes, parseISO } from 'date-fns';
+import { Queue } from 'bullmq';
+import { EMAIL_AUTH_NOTIFICATION_QUEUE, JobPriority, QueueEventJobs } from '@/queues';
 
 export class AuthService {
   private BLOCKED_PERIOD_IN_MINUTES = 5;
@@ -19,11 +21,13 @@ export class AuthService {
   private readonly _cryptoService: CryptoService;
   private readonly _redisService1: RedisService;
   private readonly _redisService2: RedisService;
+  private readonly EMAIL_AUTH_NOTIFICATION_QUEUE: Queue;
   constructor() {
     this._userService = new UserService();
     this._cryptoService = new CryptoService();
     this._redisService1 = new RedisService(redisClient1);
     this._redisService2 = new RedisService(redisClient2);
+    this.EMAIL_AUTH_NOTIFICATION_QUEUE = EMAIL_AUTH_NOTIFICATION_QUEUE;
   }
   /**
    * Login with username and password
@@ -80,7 +84,12 @@ export class AuthService {
     const hash = await this._cryptoService.generateOtpHash(hashData);
 
     // console.log(newOtp, hash);
-    // ✅ TODO : Implement the queue service and send the email to the user mail box
+    // ✅  Implement the queue service and send the email to the user mail box
+    await this.EMAIL_AUTH_NOTIFICATION_QUEUE.add(
+      QueueEventJobs.VERIFY_OTP,
+      { gbpuatEmail, otp: newOtp },
+      { priority: JobPriority.HIGHEST },
+    );
 
     await this._redisService2.setWithExpiry(
       `${REDIS_ENUM.EMAIL_VERIFICATION}`,
