@@ -20,8 +20,8 @@ export class UserController extends Api {
 
   public getUserPresence: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const userId = '664fe9bc4cb42fca1015c0f1';
-      const userlastActivePresenceInRedis = await this._redisService1.get(REDIS_ENUM.USERNAME_PRESENCE, `${userId}`);
+      const { username } = req.params;
+      const userlastActivePresenceInRedis = await this._redisService1.get(REDIS_ENUM.USERNAME_PRESENCE, `${username}`);
       const userPresenceDetails =
         userlastActivePresenceInRedis &&
         (JSON.parse(userlastActivePresenceInRedis) as unknown as Pick<
@@ -37,7 +37,7 @@ export class UserController extends Api {
               presence: false,
             },
           },
-          `user ${userId} is offline`,
+          `user ${username} is offline`,
         );
       }
 
@@ -56,7 +56,7 @@ export class UserController extends Api {
   };
   public updateUserPresence: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const userId = '664fe9bc4cb42fca1015c0f1';
+      const { id: userId, role, gbpuatId } = req.user!;
       const userLastActivePresenceInRedis = await this._redisService1.get(REDIS_ENUM.USERNAME_PRESENCE, userId);
       let userPresenceDetails:
         | (Pick<IUserDoc, 'gbpuatEmail' | 'gbpuatId' | 'lastActive'> & { mongoLastActivePresence?: string })
@@ -81,7 +81,7 @@ export class UserController extends Api {
 
           await this._redisService1.setWithExpiry(
             REDIS_ENUM.USERNAME_PRESENCE,
-            userId,
+            updatedUserInMongodb.username,
             JSON.stringify(userPresenceDetails),
             30,
           );

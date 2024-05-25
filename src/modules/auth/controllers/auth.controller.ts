@@ -95,6 +95,7 @@ export class AuthController extends Api {
           `Your account will be unblocked in approximately ${remainingHours} hour(s), ${remainingMinutes} minute(s), and ${remainingSeconds} second(s).`,
         );
       }
+
       // // ✅ TODO : Handling maximum login attempts
       if (this._authService.isAccountBlocked(user) && user.failedLogin) {
         const blockedMinutesLeft = this._authService.getBlockedMinutesLeft(user.failedLogin.lastFailedAttempt);

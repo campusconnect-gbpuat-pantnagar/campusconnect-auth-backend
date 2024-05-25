@@ -166,6 +166,8 @@ export class AuthService {
     const access_token = await this._cryptoService.generateAccessToken(user);
     const refresh_token = await this._cryptoService.generateRefreshToken(user);
 
+    // ✅ TODO: save refresh token to mongodb
+
     // console.log('access_token', access_token);
     // console.log('\nrefresh_token', refresh_token);
     const refresh_token_expiration = getConfig().JWT_REFRESH_TOKEN_COOKIE_EXPIRATION;

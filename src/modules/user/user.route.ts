@@ -2,6 +2,9 @@ import { Router } from 'express';
 import type { Route } from '../../interfaces/route.interface';
 import { UserController } from './controllers/user.controller';
 import logger from '@/lib/logger';
+import { AuthMiddleware } from '@/middlewares/auth.middleware';
+import validate from '@/middlewares/validation.middleware';
+import { userPresenceDto } from './dtos/user-presence.dto';
 
 export class UserRoute implements Route {
   public readonly path = '/users';
@@ -13,7 +16,13 @@ export class UserRoute implements Route {
     logger.debug('User Module initialized');
   }
   private initializeRoutes() {
-    this.router.get(`${this.path}/presence`, this.userController.updateUserPresence);
-    this.router.get(`${this.path}/presence/:userId`, this.userController.getUserPresence);
+    this.router.get(`${this.path}/presence`, AuthMiddleware, this.userController.updateUserPresence);
+    this.router.get(
+      `${this.path}/presence/:username`,
+      validate(userPresenceDto),
+      AuthMiddleware,
+      this.userController.getUserPresence,
+    );
   }
 }
+ 

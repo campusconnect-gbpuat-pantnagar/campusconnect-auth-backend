@@ -81,12 +81,13 @@ export type NewRegisteredUser = Omit<
   | 'otp'
   | 'failedLogin'
   | 'isDeleted'
-  | 'isBlocked'
   | 'lastActive'
   | 'receivedConnections'
   | 'sentConnections'
   | 'connectionLists'
   | 'showOnBoarding'
   | 'showOnBoardingTour'
+  | 'isPermanentBlocked'
+  | 'isTemporaryBlocked'
 >;
 export type NewCreatedUser = Omit<IUser, 'isEmailVerified'>;
