@@ -21,7 +21,7 @@ export const EMAIL_AUTH_NOTIFICATION_QUEUE = new Queue(EmailQueues.AUTH_NOTIFICA
     backoff: {
       // Optional backoff settings for retrying failed jobs
       type: 'exponential',
-      delay: 60000, // Initial delay of 1 second
+      delay: 60000, // Initial delay of 60 second
     },
   },
 });
