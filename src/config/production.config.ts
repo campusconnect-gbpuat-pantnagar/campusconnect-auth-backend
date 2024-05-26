@@ -9,10 +9,16 @@ export const productionConfig: Config = {
   DATABASE_URL: String(process.env.DATABASE_URL),
   CAMPUSCONNECT_REDIS1_URL: String(process.env.CAMPUSCONNECT_REDIS1_URL),
   CAMPUSCONNECT_REDIS2_URL: String(process.env.CAMPUSCONNECT_REDIS2_URL),
-  REDIS_CACHE_DB_HOST: String(process.env.REDIS_CACHE_DB_HOST),
-  REDIS_CACHE_DB_PORT: Number(process.env.REDIS_CACHE_DB_PORT),
-  REDIS_CACHE_DB_USER: String(process.env.REDIS_CACHE_DB_USER),
-  REDIS_CACHE_DB_PASS: String(process.env.REDIS_CACHE_DB_PASS),
+  // redis config for auth notification queue
+  REDIS_AUTH_NOTIFICATION_HOST: String(process.env.REDIS_AUTH_NOTIFICATION_HOST),
+  REDIS_AUTH_NOTIFICATION_PORT: Number(process.env.REDIS_AUTH_NOTIFICATION_PORT),
+  REDIS_AUTH_NOTIFICATION_USER: String(process.env.REDIS_AUTH_NOTIFICATION_USER),
+  REDIS_AUTH_NOTIFICATION_PASS: String(process.env.REDIS_AUTH_NOTIFICATION_PASS),
+  // redis config for app notification queue
+  REDIS_APP_NOTIFICATION_HOST: String(process.env.REDIS_APP_NOTIFICATION_HOST),
+  REDIS_APP_NOTIFICATION_PORT: Number(process.env.REDIS_APP_NOTIFICATION_PORT),
+  REDIS_APP_NOTIFICATION_USER: String(process.env.REDIS_APP_NOTIFICATION_USER),
+  REDIS_APP_NOTIFICATION_PASS: String(process.env.REDIS_APP_NOTIFICATION_PASS),
   server: {
     protocol: String(process.env.PROTOCOL) || 'https',
     host: String(process.env.HOST),

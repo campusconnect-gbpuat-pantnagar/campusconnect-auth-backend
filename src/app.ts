@@ -13,6 +13,7 @@ import ExpressMongoSanitize from 'express-mongo-sanitize';
 import morgan from './lib/morgan';
 import { checkQueueReadiness, EMAIL_AUTH_NOTIFICATION_QUEUE } from './queues';
 import { bullboardServerAdapter } from './queues/bull-board';
+import { EMAIL_APP_NOTIFICATION_QUEUE } from './queues/app.notification.queue';
 
 export class App {
   public app: express.Application;
@@ -80,7 +81,7 @@ export class App {
   }
   private initializeAdminPanel() {
     // admin only things
-    this.app.use('/api/v1/bullboard', bullboardServerAdapter());
+    this.app.use('/api/v1/admin/bullboard', bullboardServerAdapter());
   }
 
   private initializeErrorHandling() {
@@ -90,7 +91,10 @@ export class App {
 
   private async initializeQueues() {
     try {
-      await Promise.all([checkQueueReadiness(EMAIL_AUTH_NOTIFICATION_QUEUE)]);
+      await Promise.all([
+        checkQueueReadiness(EMAIL_AUTH_NOTIFICATION_QUEUE),
+        checkQueueReadiness(EMAIL_APP_NOTIFICATION_QUEUE),
+      ]);
     } catch (error) {
       logger.error('Error initializing queues:', error);
       process.exit(1);

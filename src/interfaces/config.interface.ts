@@ -7,10 +7,18 @@ export interface Config {
 
   CAMPUSCONNECT_REDIS1_URL: string;
   CAMPUSCONNECT_REDIS2_URL: string;
+
+  // redis config for auth notification queue
   REDIS_AUTH_NOTIFICATION_HOST: string;
   REDIS_AUTH_NOTIFICATION_PORT: number;
   REDIS_AUTH_NOTIFICATION_USER: string;
   REDIS_AUTH_NOTIFICATION_PASS: string;
+
+  // redis config for app notification queue
+  REDIS_APP_NOTIFICATION_HOST: string;
+  REDIS_APP_NOTIFICATION_PORT: number;
+  REDIS_APP_NOTIFICATION_USER: string;
+  REDIS_APP_NOTIFICATION_PASS: string;
   server: {
     protocol: string;
     host: string;

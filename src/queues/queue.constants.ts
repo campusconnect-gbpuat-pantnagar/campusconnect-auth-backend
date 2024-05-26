@@ -1,5 +1,5 @@
 export enum EmailQueues {
-  AUTH_NOTIFICATION = 'EMAIL_AUTH_NOTIFICATION_QUEUE',
-  APP_NOTIFICATIONS = 'EMAIL_APP_NOTIFICATIONS_QUEUE',
-  BULK_NOTIFICATION = 'EMAIL_BULK_NOTIFICATION_QUEUE',
+  AUTH_NOTIFICATION = 'email_auth_notification_queue',
+  APP_NOTIFICATION = 'email_app_notification_queue',
+  BULK_NOTIFICATION = 'email_bulk_notification_queue',
 }

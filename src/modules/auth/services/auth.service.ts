@@ -11,7 +11,9 @@ import { RedisService } from '@/infra/redis/redis.service';
 import { redisClient1, redisClient2 } from '@/infra/redis/redis-clients';
 import { differenceInMinutes, parseISO } from 'date-fns';
 import { Queue } from 'bullmq';
-import { EMAIL_AUTH_NOTIFICATION_QUEUE, JobPriority, QueueEventJobs } from '@/queues';
+import { EMAIL_AUTH_NOTIFICATION_QUEUE, JobPriority, QueueEventJobPattern, VerifyOtpJob } from '@/queues';
+import { EMAIL_APP_NOTIFICATION_QUEUE } from '@/queues/app.notification.queue';
+import logger from '@/lib/logger';
 
 export class AuthService {
   private BLOCKED_PERIOD_IN_MINUTES = 5;
@@ -84,10 +86,16 @@ export class AuthService {
     const hash = await this._cryptoService.generateOtpHash(hashData);
 
     // console.log(newOtp, hash);
+    const eventData: VerifyOtpJob['data'] = {
+      email: gbpuatEmail,
+      name: user.firstName,
+      otp: newOtp,
+    };
+
     // ✅  Implement the queue service and send the email to the user mail box
     await this.EMAIL_AUTH_NOTIFICATION_QUEUE.add(
-      QueueEventJobs.VERIFY_OTP,
-      { gbpuatEmail, otp: newOtp },
+      QueueEventJobPattern.VERIFY_OTP,
+      { ...eventData },
       { priority: JobPriority.HIGHEST },
     );
 

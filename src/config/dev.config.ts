@@ -13,6 +13,11 @@ export const devConfig: Config = {
   REDIS_AUTH_NOTIFICATION_PORT: Number(process.env.REDIS_AUTH_NOTIFICATION_PORT),
   REDIS_AUTH_NOTIFICATION_USER: String(process.env.REDIS_AUTH_NOTIFICATION_USER),
   REDIS_AUTH_NOTIFICATION_PASS: String(process.env.REDIS_AUTH_NOTIFICATION_PASS),
+  // redis config for app notification queue
+  REDIS_APP_NOTIFICATION_HOST: String(process.env.REDIS_APP_NOTIFICATION_HOST),
+  REDIS_APP_NOTIFICATION_PORT: Number(process.env.REDIS_APP_NOTIFICATION_PORT),
+  REDIS_APP_NOTIFICATION_USER: String(process.env.REDIS_APP_NOTIFICATION_USER),
+  REDIS_APP_NOTIFICATION_PASS: String(process.env.REDIS_APP_NOTIFICATION_PASS),
   server: {
     protocol: String(process.env.PROTOCOL) || 'http',
     host: String(process.env.HOST) || 'localhost',
