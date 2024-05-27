@@ -5,11 +5,14 @@ import logger from '@/lib/logger';
 import { AuthMiddleware } from '@/middlewares/auth.middleware';
 import validate from '@/middlewares/validation.middleware';
 import { userPresenceDto } from './dtos/user-presence.dto';
+import { addAndRemoveBookmarksDto } from './dtos/user-bookmark.dto';
+import { BoomarkController } from './controllers/bookmark.contoller';
 
 export class UserRoute implements Route {
   public readonly path = '/users';
   public router = Router();
   public userController = new UserController();
+  public boomarkController = new BoomarkController();
 
   constructor() {
     this.initializeRoutes();
@@ -18,18 +21,28 @@ export class UserRoute implements Route {
   private initializeRoutes() {
     // this.router.get(`${this.path}/me`, AuthMiddleware, this.userController.getUserProfile);
 
-    // this.router.get(`${this.path}/bookmarks`, AuthMiddleware, this.userController.getUserBookmarks);
+    this.router.get(`${this.path}/bookmarks`, AuthMiddleware, this.boomarkController.getUserBookmarks);
 
-    // this.router.post(`${this.path}/bookmarks`, AuthMiddleware, this.userController.addUserBookmarks);
+    this.router.post(
+      `${this.path}/bookmarks`,
+      AuthMiddleware,
+      validate(addAndRemoveBookmarksDto),
+      this.boomarkController.addUserBookmarks,
+    );
 
-    // this.router.patch(`${this.path}/bookmarks`, AuthMiddleware, this.userController.updateUserBookmarks);
+    this.router.patch(
+      `${this.path}/bookmarks`,
+      AuthMiddleware,
+      validate(addAndRemoveBookmarksDto),
+      this.boomarkController.removeUserBookmarks,
+    );
 
     this.router.get(`${this.path}/presence`, AuthMiddleware, this.userController.updateUserPresence);
 
     this.router.get(
       `${this.path}/presence/:username`,
-      validate(userPresenceDto),
       AuthMiddleware,
+      validate(userPresenceDto),
       this.userController.getUserPresence,
     );
   }

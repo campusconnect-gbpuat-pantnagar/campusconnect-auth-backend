@@ -12,33 +12,41 @@ const boomarkSchema = new mongoose.Schema<IBookmarksDoc, IBookmarksModel>(
     },
     posts: [
       {
+        _id: false,
         postId: {
           type: mongoose.Schema.Types.ObjectId,
           ref: 'Post',
+          unique: true,
         },
       },
     ],
     blogs: [
       {
+        _id: false,
         blogId: {
           type: mongoose.Schema.Types.ObjectId,
           ref: 'Blog',
+          unique: true,
         },
       },
     ],
     ads: [
       {
-        adsId: {
+        _id: false,
+        adId: {
           type: mongoose.Schema.Types.ObjectId,
           ref: 'Ads',
+          unique: true,
         },
       },
     ],
     jobs: [
       {
+        _id: false,
         jobId: {
           type: mongoose.Schema.Types.ObjectId,
           ref: 'Job',
+          unique: true,
         },
       },
     ],
