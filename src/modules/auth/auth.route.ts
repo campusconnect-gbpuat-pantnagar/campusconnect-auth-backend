@@ -8,11 +8,13 @@ import { verifyEmailDto } from './dtos/auth.verify-email.dto';
 import { usernameDto } from './dtos/auth.username.dto';
 import { sendVerificationEmailDto } from './dtos/auth.send-verification-email.dto copy';
 import logger from '@/lib/logger';
+import { RefreshTokenController } from './controllers/refresh-token.controller';
 
 export class AuthRoute implements Route {
   public readonly path = '/auth';
   public router = Router();
   public authController = new AuthController();
+  public refreshTokenController = new RefreshTokenController();
   constructor() {
     this.initializeRoutes();
     logger.debug('Auth Module initialized');
@@ -31,6 +33,7 @@ export class AuthRoute implements Route {
       this.authController.sendVerificationEmail,
     );
     this.router.post(`${this.path}/verify-email`, validate(verifyEmailDto), this.authController.verifyEmail);
+    this.router.get(`${this.path}/refresh-token`, this.refreshTokenController.refreshToken);
   }
 }
 

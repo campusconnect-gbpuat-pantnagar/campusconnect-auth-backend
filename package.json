@@ -49,6 +49,7 @@
     "@types/jsonwebtoken": "^9.0.6",
     "@types/mongoose": "^5.11.97",
     "@types/morgan": "^1.9.9",
+    "@types/redis-info": "^3.0.3",
     "@types/validator": "^13.11.10",
     "@typescript-eslint/eslint-plugin": "^7.10.0",
     "@typescript-eslint/parser": "^7.10.0",

@@ -14,18 +14,21 @@ import { Queue } from 'bullmq';
 import { EMAIL_AUTH_NOTIFICATION_QUEUE, JobPriority, QueueEventJobPattern, VerifyOtpJob } from '@/queues';
 import { EMAIL_APP_NOTIFICATION_QUEUE } from '@/queues/app.notification.queue';
 import logger from '@/lib/logger';
+import { RefreshTokenService } from '@/modules/refresh-token/refresh-token.service';
 
 export class AuthService {
   private BLOCKED_PERIOD_IN_MINUTES = 5;
   private MAX_LOGIN_ATTEMPTS = 5;
   private _user = User;
   private readonly _userService: UserService;
+  private readonly _refreshTokenService: RefreshTokenService;
   private readonly _cryptoService: CryptoService;
   private readonly _redisService1: RedisService;
   private readonly _redisService2: RedisService;
   private readonly EMAIL_AUTH_NOTIFICATION_QUEUE: Queue;
   constructor() {
     this._userService = new UserService();
+    this._refreshTokenService = new RefreshTokenService();
     this._cryptoService = new CryptoService();
     this._redisService1 = new RedisService(redisClient1);
     this._redisService2 = new RedisService(redisClient2);
@@ -184,12 +187,11 @@ export class AuthService {
     const refresh_token = await this._cryptoService.generateRefreshToken(user);
 
     // ✅ TODO: save refresh token to mongodb
-
+    await this._refreshTokenService.createRefreshToken({ userId: user.id, refreshToken: refresh_token });
     // console.log('access_token', access_token);
     // console.log('\nrefresh_token', refresh_token);
     const refresh_token_expiration = getConfig().JWT_REFRESH_TOKEN_COOKIE_EXPIRATION;
     const acess_token_expiration = getConfig().JWT_ACCESS_TOKEN_COOKIE_EXPIRATION;
-    console.log(refresh_token_expiration, acess_token_expiration);
     const access_token_expires_at = new Date(Date.now() + Number(acess_token_expiration));
     const refresh_token_expires_at = new Date(Date.now() + Number(refresh_token_expiration));
     return {

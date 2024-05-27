@@ -5,6 +5,7 @@ import bcrypt from 'bcryptjs';
 import { getConfig } from '@/config';
 import { boolean } from 'joi';
 import { IRefreshTokenDoc, IRefreshTokenModel } from './refresh-token.entity';
+import toJSON from '../../plugins/toJSON/toJSON';
 const refreshTokenSchema = new mongoose.Schema<IRefreshTokenDoc, IRefreshTokenModel>(
   {
     userId: {
@@ -23,6 +24,7 @@ const refreshTokenSchema = new mongoose.Schema<IRefreshTokenDoc, IRefreshTokenMo
   },
 );
 
+refreshTokenSchema.plugin(toJSON);
 const RefreshToken = mongoose.model<IRefreshTokenDoc, IRefreshTokenModel>('RefreshToken', refreshTokenSchema);
 
 export default RefreshToken;
