@@ -1,9 +1,5 @@
 import mongoose from 'mongoose';
-import validator from 'validator';
 
-import bcrypt from 'bcryptjs';
-import { getConfig } from '@/config';
-import { boolean } from 'joi';
 import { IRefreshTokenDoc, IRefreshTokenModel } from './refresh-token.entity';
 import toJSON from '../../plugins/toJSON/toJSON';
 const refreshTokenSchema = new mongoose.Schema<IRefreshTokenDoc, IRefreshTokenModel>(

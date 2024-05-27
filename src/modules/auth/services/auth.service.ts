@@ -137,7 +137,7 @@ export class AuthService {
     }
 
     const user = await this._userService.updateUserByGbpuatEmail({ gbpuatEmail }, { isEmailVerified: true });
-    console.log(user);
+    // console.log(user);
     return user;
   }
 
