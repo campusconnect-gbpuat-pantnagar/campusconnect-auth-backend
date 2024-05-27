@@ -18,6 +18,7 @@ const userSchema = new mongoose.Schema<IUserDoc, IUserModel>(
       type: String,
       required: true,
       trim: true,
+      maxlength: 60,
       unique: true,
       validate(value: string) {
         const usernameRegex = /^[a-zA-Z0-9_]+$/;

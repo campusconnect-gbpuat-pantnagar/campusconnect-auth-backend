@@ -4,7 +4,7 @@ import Joi from 'joi';
 const registerBody: Record<keyof NewRegisteredUser, any> = {
   gbpuatId: Joi.number().required(),
   gbpuatEmail: Joi.string().required().custom(gbpuatEmail),
-  username: Joi.string().required().custom(username),
+  username: Joi.string().required().custom(username).max(60),
   password: Joi.string().required().custom(password),
   firstName: Joi.string().required(),
   lastName: Joi.string().optional(),

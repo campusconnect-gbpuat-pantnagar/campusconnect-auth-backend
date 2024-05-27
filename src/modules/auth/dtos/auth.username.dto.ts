@@ -3,6 +3,6 @@ import { gbpuatEmail, password, username } from '@/helpers/validate/custom.valid
 import Joi from 'joi';
 export const usernameDto = {
   params: {
-    username: Joi.string().required().custom(username),
+    username: Joi.string().required().custom(username).max(60),
   },
 };
