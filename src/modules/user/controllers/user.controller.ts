@@ -8,6 +8,8 @@ import { REDIS_ENUM, REDIS_TTL_ENUM } from '@/utils/redis.constants';
 import { IUserDoc, NewRegisteredUser } from '@/infra/mongodb/models';
 import { UserService } from '../services/user.service';
 import mongoose, { Mongoose } from 'mongoose';
+import ApiError from '@/exceptions/http.exception';
+import { HttpStatusCode } from '@/enums';
 
 export class UserController extends Api {
   private readonly _redisService1: RedisService;
@@ -21,7 +23,12 @@ export class UserController extends Api {
   public getUserPresence: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { username } = req.params;
-      const userlastActivePresenceInRedis = await this._redisService1.get(REDIS_ENUM.USERNAME_PRESENCE, `${username}`);
+      const user = await this._userService.getUserByUsername(username);
+      if (!user) {
+        throw new ApiError(HttpStatusCode.FORBIDDEN, 'Unable to find user');
+      }
+
+      const userlastActivePresenceInRedis = await this._redisService1.get(REDIS_ENUM.USERNAME_PRESENCE, `${user.id}`);
       const userPresenceDetails =
         userlastActivePresenceInRedis &&
         (JSON.parse(userlastActivePresenceInRedis) as unknown as Pick<
@@ -57,6 +64,11 @@ export class UserController extends Api {
   public updateUserPresence: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id: userId, role, gbpuatId } = req.user!;
+      const user = await this._userService.getUserById(userId);
+      if (!user) {
+        throw new ApiError(HttpStatusCode.FORBIDDEN, 'Unable to find user');
+      }
+
       const userLastActivePresenceInRedis = await this._redisService1.get(REDIS_ENUM.USERNAME_PRESENCE, userId);
       let userPresenceDetails:
         | (Pick<IUserDoc, 'gbpuatEmail' | 'gbpuatId' | 'lastActive'> & { mongoLastActivePresence?: string })
@@ -70,7 +82,7 @@ export class UserController extends Api {
       }
 
       if (!userPresenceDetails) {
-        const updatedUserInMongodb = await this._userService.updateUserLastActive(new mongoose.Types.ObjectId(userId));
+        const updatedUserInMongodb = await this._userService.updateUserLastActive(user.id);
         if (updatedUserInMongodb) {
           userPresenceDetails = {
             gbpuatEmail: updatedUserInMongodb.gbpuatEmail,
@@ -81,7 +93,7 @@ export class UserController extends Api {
 
           await this._redisService1.setWithExpiry(
             REDIS_ENUM.USERNAME_PRESENCE,
-            updatedUserInMongodb.username,
+            userId,
             JSON.stringify(userPresenceDetails),
             30,
           );
@@ -102,7 +114,7 @@ export class UserController extends Api {
 
       // Check if MongoDB presence needs to be updated (every 10 minutes)
       if (currentTime - lastActivePresenceInMongodb > 30 * 60 * 1000) {
-        const updatedUserInMongodb = await this._userService.updateUserLastActive(new mongoose.Types.ObjectId(userId));
+        const updatedUserInMongodb = await this._userService.updateUserLastActive(user.id);
         userPresenceDetails!.lastActive = updatedUserInMongodb!.lastActive;
         userPresenceDetails!.mongoLastActivePresence = updatedUserInMongodb!.lastActive.toUTCString();
       }

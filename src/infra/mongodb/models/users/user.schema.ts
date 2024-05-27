@@ -4,7 +4,6 @@ import validator from 'validator';
 
 import bcrypt from 'bcryptjs';
 import { getConfig } from '@/config';
-import { boolean } from 'joi';
 import toJSON from '../../plugins/toJSON/toJSON';
 const userSchema = new mongoose.Schema<IUserDoc, IUserModel>(
   {
@@ -23,7 +22,7 @@ const userSchema = new mongoose.Schema<IUserDoc, IUserModel>(
       validate(value: string) {
         const usernameRegex = /^[a-zA-Z0-9_]+$/;
         if (!usernameRegex.test(value)) {
-          throw new Error('Username can only contain alphanumeric characters and underscores');
+          throw new Error('Username can only contain alphanumeric characters and underscores. maxlength 60 characters');
         }
       },
     },

@@ -33,3 +33,7 @@ export class AuthRoute implements Route {
     this.router.post(`${this.path}/verify-email`, validate(verifyEmailDto), this.authController.verifyEmail);
   }
 }
+
+// ✅ TODO:
+// 1. implement refresh token route for refreshing the tokens access token and refresh token.
+//

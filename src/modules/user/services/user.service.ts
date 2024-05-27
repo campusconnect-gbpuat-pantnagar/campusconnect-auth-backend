@@ -98,9 +98,13 @@ export class UserService {
     if (!user) {
       throw new ApiError(HttpStatusCode.NOT_FOUND, 'User not found');
     }
-    const updateUserLastActive = await this._user.findByIdAndUpdate(userId, {
-      $set: { lastActive: new Date() },
-    });
+    const updateUserLastActive = await this._user.findByIdAndUpdate(
+      userId,
+      {
+        $set: { lastActive: new Date() },
+      },
+      { new: true },
+    );
 
     return updateUserLastActive;
   }
@@ -110,19 +114,24 @@ export class UserService {
    * @param {string} userId
    * @returns {Promise<IUserDoc | null>}
    */
+  
   public async updateFailedAttempts(
     userId: mongoose.Types.ObjectId,
     times: number,
     lastFailedAttempt: Date,
   ): Promise<IUserDoc | null> {
-    const updateUserLastActive = await this._user.findByIdAndUpdate(userId, {
-      $set: {
-        failedLogin: {
-          times,
-          lastFailedAttempt: lastFailedAttempt,
+    const updateUserLastActive = await this._user.findByIdAndUpdate(
+      userId,
+      {
+        $set: {
+          failedLogin: {
+            times,
+            lastFailedAttempt: lastFailedAttempt,
+          },
         },
       },
-    });
+      { new: true },
+    );
 
     return updateUserLastActive;
   }
