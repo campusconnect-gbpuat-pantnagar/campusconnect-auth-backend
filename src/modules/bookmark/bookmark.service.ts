@@ -1,16 +1,5 @@
-import { getConfig } from '@/config';
-import { IUserDoc, NewCreatedUser, NewRegisteredUser } from '@/infra/mongodb/models';
-import User from '@/infra/mongodb/models/users/user.schema';
-import { HttpStatusCode } from '@/enums';
-import ApiError from '@/exceptions/http.exception';
 import mongoose, { FilterQuery, UpdateQuery } from 'mongoose';
-import { RedisService } from '@/infra/redis/redis.service';
-import { redisClient1 } from '@/infra/redis/redis-clients';
-import { REDIS_ENUM } from '@/utils/redis.constants';
-import RefreshToken from '@/infra/mongodb/models/refresh-token/refresh-token.schema';
-import { IRefreshToken, IRefreshTokenDoc } from '@/infra/mongodb/models/refresh-token/refresh-token.entity';
-import { UserService } from '../user/services/user.service';
-import Boomark from '@/infra/mongodb/models/bookmarks/bookmark.schema';
+import Boomark from '../../infra/mongodb/models/bookmarks/bookmark.schema';
 
 export class BookmarkService {
   private _bookmark = Boomark;

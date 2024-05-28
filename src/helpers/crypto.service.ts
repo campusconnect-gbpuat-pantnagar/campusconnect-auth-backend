@@ -1,8 +1,8 @@
 import crypto from 'crypto';
 import * as bcrypt from 'bcryptjs';
-import { getConfig } from '@/config';
 import * as jwt from 'jsonwebtoken';
-import { IUserDoc, NewCreatedUser } from '@/infra/mongodb/models';
+import { IUserDoc } from '../infra/mongodb/models';
+import { getConfig } from '../config';
 
 export type JwtPayloadInterface = Pick<IUserDoc, 'gbpuatId' | 'id' | 'role'>;
 export class CryptoService {

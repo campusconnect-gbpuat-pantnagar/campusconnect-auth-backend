@@ -1,5 +1,5 @@
-import { HttpStatusCode } from '@/enums';
-import { GlobalConstants } from '@/interfaces/globalConstants.interface';
+import { HttpStatusCode } from '../enums';
+import { GlobalConstants } from '../interfaces/globalConstants.interface';
 
 // Define the globalConstants object
 export const globalConstants: GlobalConstants = {

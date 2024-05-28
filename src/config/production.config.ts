@@ -1,5 +1,5 @@
-import { Config } from '@/interfaces';
 import dotenv from 'dotenv';
+import { Config } from '../interfaces';
 
 dotenv.config({ path: __dirname + `/../../.env.${process.env.NODE_ENV}` });
 const allowedOrigins = process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : [];

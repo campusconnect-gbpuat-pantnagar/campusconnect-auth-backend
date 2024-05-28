@@ -1,5 +1,5 @@
-import logger from '@/lib/logger';
 import Redis from 'ioredis';
+import logger from '../../lib/logger';
 
 export class RedisClient {
   private static instances: Map<string, Redis> = new Map();

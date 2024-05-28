@@ -1,6 +1,5 @@
-import { NewRegisteredUser } from '@/infra/mongodb/models/index';
-import { gbpuatEmail, password } from '@/helpers/validate/custom.validation';
 import Joi from 'joi';
+import { gbpuatEmail } from '../../../helpers/validate/custom.validation';
 export const verifyEmailDto = {
   body: {
     gbpuatEmail: Joi.string().required().custom(gbpuatEmail),

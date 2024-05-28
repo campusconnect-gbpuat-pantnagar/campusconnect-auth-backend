@@ -6,8 +6,8 @@
   "author": "Anmol Gangwar",
   "license": "MIT",
   "scripts": {
-    "start:module": "yarn run build && cross-env NODE_ENV=production node --max-old-space-size=4096 -r ./module-alias-setup dist/server.js",
     "start": "yarn run build && cross-env NODE_ENV=production node -r  ./tsconfig-paths.js   ./dist/server.js",
+    "start:prod": "yarn run build && cross-env NODE_ENV=production node  ./dist/server.js",
     "dev": "cross-env NODE_ENV=development tsx watch ./src/server.ts ",
     "build": "yarn clean  &&  tsc ",
     "clean": "rimraf dist/",
@@ -32,7 +32,6 @@
     "ioredis": "^5.4.1",
     "joi": "^17.13.1",
     "jsonwebtoken": "^9.0.2",
-    "module-alias": "^2.2.3",
     "mongoose": "^8.4.0",
     "morgan": "^1.10.0",
     "pm2": "^5.3.1",
@@ -64,6 +63,8 @@
     "ts-node": "^10.9.2",
     "tsx": "^4.10.5",
     "typescript": "^5.4.5",
+    "webpack": "^5.91.0",
+    "webpack-cli": "^5.1.4",
     "xss-clean": "^0.1.4"
   }
 }

@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
-import { getConfig } from '@/config';
 
-import { CustomResponse } from '@/interfaces/response.interface';
-import { globalConstants } from '@/utils';
 import logger from './logger';
+import { CustomResponse } from '../interfaces/response.interface';
+import { globalConstants } from '../utils';
+import { getConfig } from '../config';
 
 abstract class Api {
   public send<R>(

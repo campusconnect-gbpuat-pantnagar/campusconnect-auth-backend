@@ -1,10 +1,10 @@
-import ApiError from '@/exceptions/http.exception';
-import { ValidationException } from '@/exceptions/validation.exception';
-import logger from '@/lib/logger';
-import { globalConstants } from '@/utils';
 import type { NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
 import mongoose from 'mongoose';
+import ApiError from '../exceptions/http.exception';
+import { ValidationException } from '../exceptions/validation.exception';
+import logger from '../lib/logger';
+import { globalConstants } from '../utils';
 
 interface validationError {
   error: string;

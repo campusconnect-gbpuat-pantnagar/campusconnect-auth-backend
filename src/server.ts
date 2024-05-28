@@ -1,9 +1,9 @@
-import { App } from '@/app';
+import { App } from './app';
 import mongoose from 'mongoose';
 import { getConfig } from './config';
-import logger from '@/lib/logger';
+import logger from './lib/logger';
 import { AuthRoute } from './modules/auth/auth.route';
-import { connectMongoDB } from '@/infra/mongodb';
+import { connectMongoDB } from './infra/mongodb';
 import { HealthCheckRoute } from './modules/healthcheck/healthcheck.route';
 import { RedisClient } from './infra/redis/dal.redis';
 import { UserRoute } from './modules/user/user.route';
@@ -15,6 +15,7 @@ async function startServer() {
     if (getConfig().env) {
       logger.info('Config Module Initialized');
     }
+    console.log(process.env.HOST);
     await connectMongoDB();
     server = app.listen();
   } catch (error) {

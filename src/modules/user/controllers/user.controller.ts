@@ -1,15 +1,14 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express';
 
-import { getConfig } from '@/config';
-import Api from '@/lib/api.response';
-import { redisClient1 } from '@/infra/redis/redis-clients';
-import { RedisService } from '@/infra/redis/redis.service';
-import { REDIS_ENUM, REDIS_TTL_ENUM } from '@/utils/redis.constants';
-import { IUser, IUserDoc, NewRegisteredUser } from '@/infra/mongodb/models';
 import { UserService } from '../services/user.service';
 import mongoose, { Mongoose } from 'mongoose';
-import ApiError from '@/exceptions/http.exception';
-import { HttpStatusCode } from '@/enums';
+import Api from '../../../lib/api.response';
+import { RedisService } from '../../../infra/redis/redis.service';
+import { redisClient1 } from '../../../infra/redis/redis-clients';
+import { HttpStatusCode } from '../../../enums';
+import ApiError from '../../../exceptions/http.exception';
+import { REDIS_ENUM } from '../../../utils/redis.constants';
+import { IUser, IUserDoc } from '../../../infra/mongodb/models';
 
 export class UserController extends Api {
   private readonly _redisService1: RedisService;

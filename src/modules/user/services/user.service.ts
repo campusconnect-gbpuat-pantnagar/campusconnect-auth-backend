@@ -1,12 +1,10 @@
-import { getConfig } from '@/config';
-import { IUserDoc, NewCreatedUser, NewRegisteredUser } from '@/infra/mongodb/models';
-import User from '@/infra/mongodb/models/users/user.schema';
-import { HttpStatusCode } from '@/enums';
-import ApiError from '@/exceptions/http.exception';
 import mongoose, { FilterQuery, UpdateQuery } from 'mongoose';
-import { RedisService } from '@/infra/redis/redis.service';
-import { redisClient1 } from '@/infra/redis/redis-clients';
-import { REDIS_ENUM } from '@/utils/redis.constants';
+import { HttpStatusCode } from '../../../enums';
+import ApiError from '../../../exceptions/http.exception';
+import { IUserDoc, NewCreatedUser, NewRegisteredUser } from '../../../infra/mongodb/models';
+import User from '../../../infra/mongodb/models/users/user.schema';
+import { redisClient1 } from '../../../infra/redis/redis-clients';
+import { RedisService } from '../../../infra/redis/redis.service';
 
 export class UserService {
   private _user = User;

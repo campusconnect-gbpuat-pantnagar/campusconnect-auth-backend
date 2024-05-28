@@ -1,4 +1,4 @@
-import { getConfig } from '@/config';
+import { getConfig } from '../../config';
 import { RedisClient } from './dal.redis';
 import { RedisService } from './redis.service';
 

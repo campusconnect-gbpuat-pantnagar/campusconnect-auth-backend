@@ -1,5 +1,5 @@
+import { getConfig } from '../config';
 import winston from 'winston';
-import { getConfig } from '@/config';
 
 const config = getConfig();
 const levels = {

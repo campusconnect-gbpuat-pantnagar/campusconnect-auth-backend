@@ -1,20 +1,18 @@
-import { getConfig } from '@/config';
-import { IUserDoc, NewCreatedUser, NewRegisteredUser } from '@/infra/mongodb/models';
-import User from '@/infra/mongodb/models/users/user.schema';
-import { HttpStatusCode } from '@/enums';
-import ApiError from '@/exceptions/http.exception';
-import { UserService } from '@/modules/user/services/user.service';
 import mongoose from 'mongoose';
-import { REDIS_ENUM, REDIS_TTL_ENUM } from '@/utils/redis.constants';
-import { CryptoService, JwtPayloadInterface } from '@/helpers/crypto.service';
-import { RedisService } from '@/infra/redis/redis.service';
-import { redisClient1, redisClient2 } from '@/infra/redis/redis-clients';
 import { differenceInMinutes, parseISO } from 'date-fns';
 import { Queue } from 'bullmq';
-import { EMAIL_AUTH_NOTIFICATION_QUEUE, JobPriority, QueueEventJobPattern, VerifyOtpJob } from '@/queues';
-import { EMAIL_APP_NOTIFICATION_QUEUE } from '@/queues/app.notification.queue';
-import logger from '@/lib/logger';
-import { RefreshTokenService } from '@/modules/refresh-token/refresh-token.service';
+import User from '../../../infra/mongodb/models/users/user.schema';
+import { UserService } from '../../../modules/user/services/user.service';
+import { RefreshTokenService } from '../../../modules/refresh-token/refresh-token.service';
+import { CryptoService, JwtPayloadInterface } from '../../../helpers/crypto.service';
+import { RedisService } from '../../../infra/redis/redis.service';
+import { redisClient1, redisClient2 } from '../../../infra/redis/redis-clients';
+import { EMAIL_AUTH_NOTIFICATION_QUEUE, JobPriority, QueueEventJobPattern, VerifyOtpJob } from '../../../queues';
+import ApiError from '../../../exceptions/http.exception';
+import { HttpStatusCode } from '../../../enums';
+import { REDIS_ENUM, REDIS_TTL_ENUM } from '../../../utils/redis.constants';
+import { IUserDoc, NewRegisteredUser } from '../../../infra/mongodb/models';
+import { getConfig } from '../../../config';
 
 export class AuthService {
   private BLOCKED_PERIOD_IN_MINUTES = 5;

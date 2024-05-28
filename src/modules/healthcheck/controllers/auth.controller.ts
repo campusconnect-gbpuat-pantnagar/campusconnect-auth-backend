@@ -1,7 +1,5 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express';
 
-import Api from '@/lib/api.response';
-
 export class HealthCheckController {
   constructor() {}
 

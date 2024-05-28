@@ -1,5 +1,5 @@
 import { Queue } from 'bullmq';
-import logger from '@/lib/logger';
+import logger from '../lib/logger';
 
 export const checkQueueReadiness = async (queue: Queue): Promise<void> => {
   try {

@@ -1,17 +1,11 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express';
-
-import { getConfig } from '@/config';
-import Api from '@/lib/api.response';
-import { redisClient1 } from '@/infra/redis/redis-clients';
-import { RedisService } from '@/infra/redis/redis.service';
-import { REDIS_ENUM, REDIS_TTL_ENUM } from '@/utils/redis.constants';
-import { IUserDoc, NewRegisteredUser } from '@/infra/mongodb/models';
-import mongoose, { Mongoose } from 'mongoose';
-import ApiError from '@/exceptions/http.exception';
-import { HttpStatusCode } from '@/enums';
-import { RefreshTokenService } from '@/modules/refresh-token/refresh-token.service';
-import { CryptoService } from '@/helpers/crypto.service';
 import { AuthService } from '../services/auth.service';
+import Api from '../../../lib/api.response';
+import { RefreshTokenService } from '../../../modules/refresh-token/refresh-token.service';
+import { CryptoService } from '../../../helpers/crypto.service';
+import ApiError from '../../../exceptions/http.exception';
+import { HttpStatusCode } from '../../../enums';
+import { getConfig } from '../../../config';
 
 export class RefreshTokenController extends Api {
   private readonly _refreshTokenService: RefreshTokenService;

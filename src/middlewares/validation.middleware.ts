@@ -1,7 +1,7 @@
 import Joi, { ValidationErrorItem } from 'joi';
 import { Request, Response, NextFunction } from 'express';
-import pick from '@/helpers/pick';
-import { ValidationException } from '@/exceptions/validation.exception';
+import { ValidationException } from '../exceptions/validation.exception';
+import pick from '../helpers/pick';
 
 const validate =
   (schema: Record<string, any>) =>

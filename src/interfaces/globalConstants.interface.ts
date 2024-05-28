@@ -1,4 +1,4 @@
-import { HttpStatusCode } from '@/enums';
+import { HttpStatusCode } from "../enums";
 
 // Define an interface for the status object
 export interface Status {

@@ -2,8 +2,8 @@ import { createBullBoard } from '@bull-board/api';
 import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
 import { ExpressAdapter } from '@bull-board/express';
 import { EMAIL_AUTH_NOTIFICATION_QUEUE } from './auth.notification.queue';
-import logger from '@/lib/logger';
 import { EMAIL_APP_NOTIFICATION_QUEUE } from './app.notification.queue';
+import logger from '../lib/logger';
 
 const serverAdapter = new ExpressAdapter();
 serverAdapter.setBasePath('/api/v1/admin/bullboard');

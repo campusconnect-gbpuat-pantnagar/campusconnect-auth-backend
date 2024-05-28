@@ -3,8 +3,8 @@ import { IUser, IUserDoc, IUserModel } from './user.entity';
 import validator from 'validator';
 
 import bcrypt from 'bcryptjs';
-import { getConfig } from '@/config';
 import toJSON from '../../plugins/toJSON/toJSON';
+import { getConfig } from '../../../../config';
 const userSchema = new mongoose.Schema<IUserDoc, IUserModel>(
   {
     gbpuatId: {

@@ -1,4 +1,4 @@
-import { JwtPayloadInterface } from '@/helpers/crypto.service';
+import { JwtPayloadInterface } from '../helpers/crypto.service';
 
 declare module 'express-serve-static-core' {
   interface Request {

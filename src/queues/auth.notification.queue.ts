@@ -1,6 +1,6 @@
 import { Queue } from 'bullmq';
 import { EmailQueues } from './queue.constants';
-import { getConfig } from '@/config';
+import { getConfig } from '../config';
 
 export const EMAIL_AUTH_NOTIFICATION_QUEUE = new Queue(EmailQueues.AUTH_NOTIFICATION, {
   connection: {

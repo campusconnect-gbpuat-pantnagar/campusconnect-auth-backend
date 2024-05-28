@@ -1,8 +1,8 @@
-import { HttpStatusCode } from '@/enums';
-import ApiError from '@/exceptions/http.exception';
-import { CryptoService } from '@/helpers/crypto.service';
-import { globalConstants } from '@/utils';
 import { NextFunction, Request, Response } from 'express';
+import { HttpStatusCode } from '../enums';
+import ApiError from '../exceptions/http.exception';
+import { CryptoService } from '../helpers/crypto.service';
+import { globalConstants } from '../utils';
 
 export async function AuthMiddleware(req: Request, res: Response, next: NextFunction) {
   try {

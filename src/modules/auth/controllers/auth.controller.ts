@@ -1,13 +1,12 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express';
 
-import { getConfig } from '@/config';
-import Api from '@/lib/api.response';
-import { UserService } from '@/modules/user/services/user.service';
+import { getConfig } from '../../../config';
+import Api from '../../../lib/api.response';
+import { UserService } from '../../user/services/user.service';
 import { AuthService } from '../services/auth.service';
-import { HttpStatusCode } from '@/enums';
-import ApiError from '@/exceptions/http.exception';
+import { HttpStatusCode } from '../../../enums';
+import ApiError from '../../../exceptions/http.exception';
 import { addDays, format } from 'date-fns';
-import { CryptoService } from '@/helpers/crypto.service';
 
 export class AuthController extends Api {
   private readonly _userService: UserService;
@@ -120,7 +119,7 @@ export class AuthController extends Api {
       // if  verified then send tokens
       // ✅ TODO: Implement tokens functionality
       const { access_token, access_token_expires_at, refresh_token, refresh_token_expires_at } =
-        await this._authService.getTokens(user);
+        await this._authService.getTokens({ id: user.id, gbpuatId: user.gbpuatId, role: user.role });
 
       res.cookie('access_token', refresh_token, {
         secure: true,
@@ -184,11 +183,11 @@ export class AuthController extends Api {
     try {
       const { gbpuatEmail, otp } = req.body;
       // console.log(gbpuatEmail, otp);
-      const user = await this._authService.verifyEmail(gbpuatEmail, otp);
+      const user = await this._authService.verifyEmail(gbpuatEmail, otp)!;
       // if  verified then send tokens
       // ✅ TODO: Implement tokens functionality
       const { access_token, access_token_expires_at, refresh_token, refresh_token_expires_at } =
-        await this._authService.getTokens(user!);
+        await this._authService.getTokens({ id: user?.id, gbpuatId: user?.gbpuatId!, role: user?.role });
 
       res.cookie('access_token', refresh_token, {
         secure: true,
@@ -289,7 +288,7 @@ export class AuthController extends Api {
       // if  verified then send tokens
       // ✅ TODO: Implement tokens functionality
       const { access_token, access_token_expires_at, refresh_token, refresh_token_expires_at } =
-        await this._authService.getTokens(user);
+        await this._authService.getTokens({ id: user.id, gbpuatId: user.gbpuatId, role: user.role });
 
       res.cookie('access_token', refresh_token, {
         secure: true,

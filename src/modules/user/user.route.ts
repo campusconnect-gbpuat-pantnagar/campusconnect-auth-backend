@@ -1,12 +1,12 @@
 import { Router } from 'express';
 import type { Route } from '../../interfaces/route.interface';
 import { UserController } from './controllers/user.controller';
-import logger from '@/lib/logger';
-import { AuthMiddleware } from '@/middlewares/auth.middleware';
-import validate from '@/middlewares/validation.middleware';
 import { userPresenceDto } from './dtos/user-presence.dto';
 import { addAndRemoveBookmarksDto } from './dtos/user-bookmark.dto';
 import { BoomarkController } from './controllers/bookmark.contoller';
+import { AuthMiddleware } from '../../middlewares/auth.middleware';
+import logger from '../../lib/logger';
+import validate from '../../middlewares/validation.middleware';
 
 export class UserRoute implements Route {
   public readonly path = '/users';

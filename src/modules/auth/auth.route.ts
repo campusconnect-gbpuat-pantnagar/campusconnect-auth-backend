@@ -7,7 +7,7 @@ import { loginDto } from './dtos/auth.login.dto';
 import { verifyEmailDto } from './dtos/auth.verify-email.dto';
 import { usernameDto } from './dtos/auth.username.dto';
 import { sendVerificationEmailDto } from './dtos/auth.send-verification-email.dto copy';
-import logger from '@/lib/logger';
+import logger from '../../lib/logger';
 import { RefreshTokenController } from './controllers/refresh-token.controller';
 import { keepAccountDto } from './dtos/auth.keep-account.dto';
 

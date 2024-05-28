@@ -1,6 +1,6 @@
-import { NewRegisteredUser } from '@/infra/mongodb/models/index';
-import { gbpuatEmail, password, username } from '@/helpers/validate/custom.validation';
 import Joi from 'joi';
+import { gbpuatEmail, password, username } from '../../../helpers/validate/custom.validation';
+import { NewRegisteredUser } from '../../../infra/mongodb/models';
 const registerBody: Record<keyof NewRegisteredUser, any> = {
   gbpuatId: Joi.number().required(),
   gbpuatEmail: Joi.string().required().custom(gbpuatEmail),

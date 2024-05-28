@@ -1,16 +1,8 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express';
-
-import { getConfig } from '@/config';
-import Api from '@/lib/api.response';
-import { redisClient1 } from '@/infra/redis/redis-clients';
-import { RedisService } from '@/infra/redis/redis.service';
-import { REDIS_ENUM, REDIS_TTL_ENUM } from '@/utils/redis.constants';
-import { IUserDoc, NewRegisteredUser } from '@/infra/mongodb/models';
-import { UserService } from '../services/user.service';
-import mongoose, { Mongoose } from 'mongoose';
-import ApiError from '@/exceptions/http.exception';
-import { HttpStatusCode } from '@/enums';
-import { BookmarkService } from '@/modules/bookmark/bookmark.service';
+import { redisClient1 } from '../../../infra/redis/redis-clients';
+import { RedisService } from '../../../infra/redis/redis.service';
+import Api from '../../../lib/api.response';
+import { BookmarkService } from '../../../modules/bookmark/bookmark.service';
 
 export class BoomarkController extends Api {
   private readonly _redisService1: RedisService;

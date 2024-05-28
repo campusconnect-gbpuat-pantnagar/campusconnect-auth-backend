@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import type { Route } from '../../interfaces/route.interface';
 import { HealthCheckController } from './controllers/auth.controller';
-import logger from '@/lib/logger';
+import logger from '../../lib/logger';
 
 export class HealthCheckRoute implements Route {
   public readonly path = '/healthcheck';
