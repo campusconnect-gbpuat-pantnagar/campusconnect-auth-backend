@@ -139,6 +139,7 @@ export class AuthService {
       throw new ApiError(HttpStatusCode.BAD_REQUEST, 'Invalid OTP (One time password)');
     }
 
+    // ✅ TODO :trigger a event that removes all the otp generate for user
     const user = await this._userService.updateUserByGbpuatEmail({ gbpuatEmail }, { isEmailVerified: true });
     console.log(user);
     return user;

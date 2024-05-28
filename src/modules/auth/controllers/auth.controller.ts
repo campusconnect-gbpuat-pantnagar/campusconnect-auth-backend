@@ -284,7 +284,7 @@ export class AuthController extends Api {
           isDeleted: false,
         },
       );
-      console.log(updatedUser);
+      // console.log(updatedUser);
 
       // if  verified then send tokens
       // ✅ TODO: Implement tokens functionality
