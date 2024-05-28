@@ -6,6 +6,7 @@
   "author": "Anmol Gangwar",
   "license": "MIT",
   "scripts": {
+    "start:module": "yarn run build && cross-env NODE_ENV=production node --max-old-space-size=4096 -r ./module-alias-setup dist/server.js",
     "start": "yarn run build && cross-env NODE_ENV=production node -r  ./tsconfig-paths.js   ./dist/server.js",
     "dev": "cross-env NODE_ENV=development tsx watch ./src/server.ts ",
     "build": "yarn clean  &&  tsc ",
@@ -31,6 +32,7 @@
     "ioredis": "^5.4.1",
     "joi": "^17.13.1",
     "jsonwebtoken": "^9.0.2",
+    "module-alias": "^2.2.3",
     "mongoose": "^8.4.0",
     "morgan": "^1.10.0",
     "pm2": "^5.3.1",
