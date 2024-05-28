@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "start": "yarn run build && cross-env NODE_ENV=production node -r  ./tsconfig-paths.js   ./dist/server.js",
-    "start:prod": "yarn run build && cross-env NODE_ENV=production node  ./dist/server.js",
+    "start:prod": "cross-env NODE_ENV=production node  ./dist/server.js",
     "dev": "cross-env NODE_ENV=development tsx watch ./src/server.ts ",
     "build": "yarn clean  &&  tsc ",
     "clean": "rimraf dist/",
@@ -63,7 +63,6 @@
     "ts-node": "^10.9.2",
     "tsx": "^4.10.5",
     "typescript": "^5.4.5",
-    "webpack-cli": "^5.1.4",
     "xss-clean": "^0.1.4"
   }
 }

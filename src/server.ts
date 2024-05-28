@@ -15,7 +15,6 @@ async function startServer() {
     if (getConfig().env) {
       logger.info('Config Module Initialized');
     }
-    console.log(process.env.HOST);
     await connectMongoDB();
     server = app.listen();
   } catch (error) {
