@@ -6,7 +6,7 @@
   "author": "Anmol Gangwar",
   "license": "MIT",
   "scripts": {
-    "start": "yarn run build && cross-env NODE_ENV=production node -r  ./tsconfig-paths.js   ./dist/server.js",
+    "start": "cross-env NODE_ENV=production node -r  ./tsconfig-paths.js   ./dist/server.js",
     "dev": "cross-env NODE_ENV=development tsx watch ./src/server.ts ",
     "build": "yarn clean  &&  tsc ",
     "clean": "rimraf dist/",
