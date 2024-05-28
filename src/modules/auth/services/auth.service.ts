@@ -85,8 +85,8 @@ export class AuthService {
     }
     const newOtp = await this._cryptoService.otpGenerator();
     const hashData = `${gbpuatEmail}${newOtp}`;
-
     const hash = await this._cryptoService.generateOtpHash(hashData);
+    console.log(hash);
 
     // console.log(newOtp, hash);
     const eventData: VerifyOtpJob['data'] = {
@@ -105,7 +105,7 @@ export class AuthService {
     await this._redisService2.setWithExpiry(
       `${REDIS_ENUM.EMAIL_VERIFICATION}`,
       `${user.gbpuatEmail}:${hash}`,
-      JSON.stringify({ newOtp, gbpuatEmail }),
+      JSON.stringify({ otp: newOtp, gbpuatEmail }),
       REDIS_TTL_ENUM.FIVE_MINUTES,
     );
 
@@ -126,10 +126,13 @@ export class AuthService {
   }
   public async verifyEmail(gbpuatEmail: string, otp: number) {
     const hashData = `${gbpuatEmail}${otp}`;
-
     const hash = await this._cryptoService.generateOtpHash(hashData);
-    // console.log(`${gbpuatEmail}${hash}`);
+    console.log(hash);
+
+    console.log(`${gbpuatEmail}${hash}`);
     const isEmail = await this._redisService2.get(`${REDIS_ENUM.EMAIL_VERIFICATION}`, `${gbpuatEmail}:${hash}`);
+
+    console.log(isEmail);
     const isEmailValid = isEmail && (JSON.parse(isEmail) as unknown as { gbpuatEmail: string; otp: number });
     // console.log(isEmail);
     if (!isEmailValid) {
@@ -137,7 +140,7 @@ export class AuthService {
     }
 
     const user = await this._userService.updateUserByGbpuatEmail({ gbpuatEmail }, { isEmailVerified: true });
-    // console.log(user);
+    console.log(user);
     return user;
   }
 

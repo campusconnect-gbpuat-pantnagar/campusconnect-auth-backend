@@ -40,6 +40,14 @@ export class AuthController extends Api {
     try {
       const { username, password } = req.body;
       const user = await this._authService.loginUserWithUsernameAndPassword(username, password);
+      // // ✅ TODO : Handling maximum login attempts
+      if (this._authService.isAccountBlocked(user) && user.failedLogin) {
+        const blockedMinutesLeft = this._authService.getBlockedMinutesLeft(user.failedLogin.lastFailedAttempt);
+        throw new ApiError(
+          HttpStatusCode.UNAUTHORIZED,
+          `Account blocked, Please try again after ${blockedMinutesLeft} minutes`,
+        );
+      }
 
       // ✅  Handling for user which has deleted his account ->  move user to reopen-account page for consent -> if User
       if (user.isDeleted) {
@@ -52,9 +60,7 @@ export class AuthController extends Api {
         return this.send(
           res,
           {
-            user: {
-              isDeleted: user.isDeleted,
-            },
+            user: { username: user.username, isDeleted: user.isDeleted, gbpuatEmail: user.gbpuatEmail },
           },
           `Your requested to delete ${user.username}. If you want to keep it, you have until ${formattedDate} to let us know. Otherwise, all your information will be deleted.`,
         );
@@ -96,20 +102,14 @@ export class AuthController extends Api {
         );
       }
 
-      // // ✅ TODO : Handling maximum login attempts
-      if (this._authService.isAccountBlocked(user) && user.failedLogin) {
-        const blockedMinutesLeft = this._authService.getBlockedMinutesLeft(user.failedLogin.lastFailedAttempt);
-        throw new ApiError(
-          HttpStatusCode.UNAUTHORIZED,
-          `Account blocked, Please try again after ${blockedMinutesLeft} minutes`,
-        );
-      }
       // ✅  Handling if email is not verified
       if (!user.isEmailVerified) {
         return this.send(
           res,
           {
             user: {
+              gbpuatEmail: user.gbpuatEmail,
+              gbpuatId: user.gbpuatId,
               isEmailVerified: user.isEmailVerified,
             },
           },
@@ -220,6 +220,107 @@ export class AuthController extends Api {
 
       const tokens = { access_token, access_token_expires_at };
       this.send(res, { user, tokens }, `account verification completed successfully`);
+    } catch (err) {
+      next(err);
+    }
+  };
+  public keepAccount: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { username, password } = req.body;
+      const user = await this._authService.loginUserWithUsernameAndPassword(username, password);
+      // // ✅ TODO : Handling maximum login attempts
+      if (this._authService.isAccountBlocked(user) && user.failedLogin) {
+        const blockedMinutesLeft = this._authService.getBlockedMinutesLeft(user.failedLogin.lastFailedAttempt);
+        throw new ApiError(
+          HttpStatusCode.UNAUTHORIZED,
+          `Account blocked, Please try again after ${blockedMinutesLeft} minutes`,
+        );
+      }
+
+      // ✅  Handling for user which has deleted his account ->  move user to reopen-account page for consent -> if User
+      if (!user.isDeleted) {
+        throw new ApiError(HttpStatusCode.FORBIDDEN, 'FORBIDDEN');
+      }
+      // ✅  Implementation for  permanent blocked user  -> Your Account is Blocked contact admin.
+      if (user.isPermanentBlocked) {
+        return this.send(
+          res,
+          {
+            user: {
+              isPermanentBlocked: user.isPermanentBlocked,
+            },
+          },
+          'Your account is permanently blocked. Please contact the admin for assistance.',
+        );
+      }
+
+      // ✅  Implementation for  temporary blocked user  -> your account will be unblocked shortly.
+      if (user.isTemporaryBlocked) {
+        const lastActiveTime = new Date(user.lastActive).getTime();
+        const sixHoursInMilliseconds = 6 * 60 * 60 * 1000;
+        const unblockTime = lastActiveTime + sixHoursInMilliseconds;
+        const currentTime = new Date().getTime();
+        const remainingTime = unblockTime - currentTime;
+
+        const remainingHours = Math.floor(remainingTime / (60 * 60 * 1000));
+        const remainingMinutes = Math.floor((remainingTime % (60 * 60 * 1000)) / (60 * 1000));
+        const remainingSeconds = Math.floor((remainingTime % (60 * 1000)) / 1000);
+
+        return this.send(
+          res,
+          {
+            user: {
+              isTemporaryBlocked: user.isTemporaryBlocked,
+            },
+          },
+          `Your account will be unblocked in approximately ${remainingHours} hour(s), ${remainingMinutes} minute(s), and ${remainingSeconds} second(s).`,
+        );
+      }
+      // recover the user account from isDeleted
+
+      const updatedUser = await this._userService.updateUserByGbpuatEmail(
+        { gbpuatEmail: user.gbpuatEmail },
+        {
+          isDeleted: false,
+        },
+      );
+      console.log(updatedUser);
+
+      // if  verified then send tokens
+      // ✅ TODO: Implement tokens functionality
+      const { access_token, access_token_expires_at, refresh_token, refresh_token_expires_at } =
+        await this._authService.getTokens(user);
+
+      res.cookie('access_token', refresh_token, {
+        secure: true,
+        httpOnly: true,
+        sameSite: 'none',
+        maxAge: getConfig().JWT_ACCESS_TOKEN_COOKIE_EXPIRATION,
+      });
+
+      res.cookie('access_token_expires_at', access_token_expires_at, {
+        secure: true,
+        httpOnly: true,
+        sameSite: 'none',
+        maxAge: getConfig().JWT_ACCESS_TOKEN_COOKIE_EXPIRATION,
+      });
+
+      res.cookie('refresh_token', refresh_token, {
+        secure: true,
+        httpOnly: true,
+        sameSite: 'none',
+        maxAge: getConfig().JWT_REFRESH_TOKEN_COOKIE_EXPIRATION,
+      });
+
+      res.cookie('refresh_token_expires_at', refresh_token_expires_at, {
+        secure: true,
+        httpOnly: true,
+        sameSite: 'none',
+        maxAge: getConfig().JWT_REFRESH_TOKEN_COOKIE_EXPIRATION,
+      });
+
+      const tokens = { access_token, access_token_expires_at };
+      this.send(res, { user: { ...updatedUser }, tokens }, 'user login successfully');
     } catch (err) {
       next(err);
     }

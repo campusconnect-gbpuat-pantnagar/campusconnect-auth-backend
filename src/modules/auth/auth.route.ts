@@ -9,6 +9,7 @@ import { usernameDto } from './dtos/auth.username.dto';
 import { sendVerificationEmailDto } from './dtos/auth.send-verification-email.dto copy';
 import logger from '@/lib/logger';
 import { RefreshTokenController } from './controllers/refresh-token.controller';
+import { keepAccountDto } from './dtos/auth.keep-account.dto';
 
 export class AuthRoute implements Route {
   public readonly path = '/auth';
@@ -27,6 +28,7 @@ export class AuthRoute implements Route {
     );
     this.router.post(`${this.path}/signup`, validate(registerDto), this.authController.registerUser);
     this.router.post(`${this.path}/signin`, validate(loginDto), this.authController.loginUser);
+    this.router.post(`${this.path}/keep-account`, validate(keepAccountDto), this.authController.keepAccount);
     this.router.post(
       `${this.path}/send-verification-email`,
       validate(sendVerificationEmailDto),

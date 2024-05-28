@@ -81,11 +81,14 @@ export class UserService {
     filter: FilterQuery<IUserDoc>,
     update: UpdateQuery<IUserDoc>,
   ): Promise<IUserDoc | null> {
-    return this._user.findOneAndUpdate(
-      filter,
-      { $set: update },
-      { new: true }, // This option returns the updated document
-    );
+    const updatedUser = await this._user
+      .findOneAndUpdate(
+        filter,
+        { $set: update },
+        { new: true }, // This option returns the updated document
+      )
+      .exec();
+    return updatedUser ? updatedUser.toJSON() : null;
   }
 
   /**
@@ -114,7 +117,7 @@ export class UserService {
    * @param {string} userId
    * @returns {Promise<IUserDoc | null>}
    */
-  
+
   public async updateFailedAttempts(
     userId: mongoose.Types.ObjectId,
     times: number,
