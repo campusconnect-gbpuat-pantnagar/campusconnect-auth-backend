@@ -11,20 +11,28 @@ const app = new App([new AuthRoute(), new HealthCheckRoute(), new UserRoute()]);
 let server: any;
 
 async function startServer() {
-  if (getConfig().env) {
-    logger.info('Config Module Initialized');
+  try {
+    if (getConfig().env) {
+      logger.info('Config Module Initialized');
+    }
+    await connectMongoDB();
+    server = app.listen();
+  } catch (error) {
+    logger.error('Error starting server:', error);
+    process.exit(1);
   }
-  connectMongoDB();
-  server = app.listen();
 }
 const exitHandler = () => {
   if (server) {
     server.close(() => {
       logger.info('Server closed');
-      process.exit(1);
+      RedisClient.quitAll();
+      mongoose.connection.close();
+      logger.info('MongoDB connection closed');
+      process.exit(0);
     });
   } else {
-    process.exit(1);
+    process.exit(0);
   }
 };
 
@@ -40,8 +48,10 @@ process.on('unhandledRejection', unexpectedErrorHandler);
 
 process.on('SIGTERM', () => {
   logger.info('SIGTERM received');
-  RedisClient.quitAll();
-  if (server) {
-    server.close();
-  }
+  exitHandler();
+});
+
+process.on('SIGINT', () => {
+  logger.info('SIGINT received');
+  exitHandler();
 });
