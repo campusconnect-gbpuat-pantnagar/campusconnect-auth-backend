@@ -102,6 +102,7 @@ const userSchema = new mongoose.Schema<IUserDoc, IUserModel>(
     resetToken: {
       type: String,
       default: null,
+      private: true, // used by the toJSON plugin
     },
     failedLogin: {
       times: {

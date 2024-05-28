@@ -5,7 +5,7 @@ import Api from '@/lib/api.response';
 import { redisClient1 } from '@/infra/redis/redis-clients';
 import { RedisService } from '@/infra/redis/redis.service';
 import { REDIS_ENUM, REDIS_TTL_ENUM } from '@/utils/redis.constants';
-import { IUserDoc, NewRegisteredUser } from '@/infra/mongodb/models';
+import { IUser, IUserDoc, NewRegisteredUser } from '@/infra/mongodb/models';
 import { UserService } from '../services/user.service';
 import mongoose, { Mongoose } from 'mongoose';
 import ApiError from '@/exceptions/http.exception';
@@ -120,6 +120,60 @@ export class UserController extends Api {
       }
 
       return this.send(res, null, 'User online presence updated');
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  public getCurrentUserProfile: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id, gbpuatId, role } = req.user!;
+      const user = await this._userService.getUserById(id);
+      this.send(res, { user }, `your profile details`);
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  public getUserProfile: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { username } = req.params;
+      const user = await this._userService.getUserByUsername(username);
+      // check is user is deleted or permanent block
+
+      if (!user || user?.isDeleted || user?.isPermanentBlocked) {
+        throw new ApiError(HttpStatusCode.BAD_REQUEST, `user with username ${username} not found. `);
+      }
+
+      const userData: Omit<IUser, 'password' | 'receivedConnections' | 'sentConnections'> & { id: string } = {
+        gbpuatId: user.gbpuatId,
+        username: user.username,
+        gbpuatEmail: user.gbpuatEmail,
+        isEmailVerified: user.isEmailVerified,
+        firstName: user.firstName,
+        academicDetails: {
+          college: {
+            name: user.academicDetails.college.name,
+            collegeId: user.academicDetails.college.collegeId,
+          },
+          department: {
+            name: user.academicDetails.department.name,
+            departmentId: user.academicDetails.department.departmentId,
+          },
+          degreeProgram: {
+            name: user.academicDetails.degreeProgram.name,
+            degreeProgramId: user.academicDetails.degreeProgram.degreeProgramId,
+          },
+          batchYear: user.academicDetails.batchYear,
+          designation: user.academicDetails.designation,
+        },
+        lastActive: user.lastActive,
+        profilePicture: user.profilePicture,
+        role: user.role,
+        id: user.id,
+        connectionLists: user.connectionLists,
+      };
+      this.send(res, { user: userData }, `${username} profile details`);
     } catch (err) {
       next(err);
     }
