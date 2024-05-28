@@ -12,7 +12,7 @@ let server: any;
 
 async function startServer() {
   if (getConfig().env) {
-    logger.debug('Config Module Initialized');
+    logger.info('Config Module Initialized');
   }
   connectMongoDB();
   server = app.listen();

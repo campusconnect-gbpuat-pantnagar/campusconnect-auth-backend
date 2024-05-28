@@ -16,7 +16,7 @@ export class UserRoute implements Route {
 
   constructor() {
     this.initializeRoutes();
-    logger.debug('User Module initialized');
+    logger.info('User Module initialized');
   }
   private initializeRoutes() {
     this.router.get(`${this.path}/me`, AuthMiddleware, this.userController.getCurrentUserProfile);

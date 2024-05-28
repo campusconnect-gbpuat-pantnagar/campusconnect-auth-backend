@@ -14,7 +14,7 @@ createBullBoard({
 });
 
 const bullboardServerAdapter = () => {
-  logger.debug(`Bull board is ready`);
+  logger.info(`Bull board is ready`);
   return serverAdapter.getRouter();
 };
 export { bullboardServerAdapter };

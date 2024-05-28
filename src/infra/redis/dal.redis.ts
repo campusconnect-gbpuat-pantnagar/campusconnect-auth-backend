@@ -14,7 +14,7 @@ export class RedisClient {
           return true;
         },
         retryStrategy: (times) => {
-          console.debug(`Redis ${instanceName} client retryStrategy called ${times} times`);
+          console.info(`Redis ${instanceName} client retryStrategy called ${times} times`);
           if (times >= 20) {
             console.error(`Redis ${instanceName} client: Maximum retry attempts reached`);
             return undefined; // Stop retrying after 20 attempts
@@ -24,11 +24,11 @@ export class RedisClient {
       });
 
       client.on('connect', () => {
-        logger.debug(`Redis ${instanceName} client connected`);
+        logger.info(`Redis ${instanceName} client connected`);
       });
 
       client.on('ready', () => {
-        logger.debug(`Redis ${instanceName} client ready to use`);
+        logger.info(`Redis ${instanceName} client ready to use`);
       });
 
       client.on('error', (err) => {
@@ -36,7 +36,7 @@ export class RedisClient {
       });
 
       client.on('end', () => {
-        logger.debug(`Redis ${instanceName} client disconnected`);
+        logger.info(`Redis ${instanceName} client disconnected`);
       });
 
       RedisClient.instances.set(url, client);

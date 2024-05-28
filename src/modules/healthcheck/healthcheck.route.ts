@@ -9,7 +9,7 @@ export class HealthCheckRoute implements Route {
   public HealthCheckController = new HealthCheckController();
   constructor() {
     this.initializeRoutes();
-    logger.debug('HealthCheck Module initialized');
+    logger.info('HealthCheck Module initialized');
   }
   private initializeRoutes() {
     this.router.get(`${this.path}`, this.HealthCheckController.healthCheck);

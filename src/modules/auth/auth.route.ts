@@ -18,7 +18,7 @@ export class AuthRoute implements Route {
   public refreshTokenController = new RefreshTokenController();
   constructor() {
     this.initializeRoutes();
-    logger.debug('Auth Module initialized');
+    logger.info('Auth Module initialized');
   }
   private initializeRoutes() {
     this.router.get(
