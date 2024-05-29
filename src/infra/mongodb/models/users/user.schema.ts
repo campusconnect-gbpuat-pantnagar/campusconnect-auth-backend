@@ -98,6 +98,7 @@ const userSchema = new mongoose.Schema<IUserDoc, IUserModel>(
     bio: {
       type: String,
       trim: true,
+      default: null,
     },
     resetToken: {
       type: String,
