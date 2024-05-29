@@ -123,28 +123,28 @@ export class AuthController extends Api {
         await this._authService.getTokens(user);
 
       res.cookie('access_token', refresh_token, {
-        secure: true,
+        secure: !getConfig().isDev(),
         httpOnly: true,
         sameSite: 'none',
         maxAge: getConfig().JWT_ACCESS_TOKEN_COOKIE_EXPIRATION,
       });
 
       res.cookie('access_token_expires_at', access_token_expires_at, {
-        secure: true,
+        secure: !getConfig().isDev(),
         httpOnly: true,
         sameSite: 'none',
         maxAge: getConfig().JWT_ACCESS_TOKEN_COOKIE_EXPIRATION,
       });
 
       res.cookie('refresh_token', refresh_token, {
-        secure: true,
+        secure: !getConfig().isDev(),
         httpOnly: true,
         sameSite: 'none',
         maxAge: getConfig().JWT_REFRESH_TOKEN_COOKIE_EXPIRATION,
       });
 
       res.cookie('refresh_token_expires_at', refresh_token_expires_at, {
-        secure: true,
+        secure: !getConfig().isDev(),
         httpOnly: true,
         sameSite: 'none',
         maxAge: getConfig().JWT_REFRESH_TOKEN_COOKIE_EXPIRATION,
@@ -191,28 +191,28 @@ export class AuthController extends Api {
         await this._authService.getTokens(user!);
 
       res.cookie('access_token', refresh_token, {
-        secure: true,
+        secure: !getConfig().isDev(),
         httpOnly: true,
         sameSite: 'none',
         maxAge: getConfig().JWT_ACCESS_TOKEN_COOKIE_EXPIRATION,
       });
 
       res.cookie('access_token_expires_at', access_token_expires_at, {
-        secure: true,
+        secure: !getConfig().isDev(),
         httpOnly: true,
         sameSite: 'none',
         maxAge: getConfig().JWT_ACCESS_TOKEN_COOKIE_EXPIRATION,
       });
 
       res.cookie('refresh_token', refresh_token, {
-        secure: true,
+        secure: !getConfig().isDev(),
         httpOnly: true,
         sameSite: 'none',
         maxAge: getConfig().JWT_REFRESH_TOKEN_COOKIE_EXPIRATION,
       });
 
       res.cookie('refresh_token_expires_at', refresh_token_expires_at, {
-        secure: true,
+        secure: !getConfig().isDev(),
         httpOnly: true,
         sameSite: 'none',
         maxAge: getConfig().JWT_REFRESH_TOKEN_COOKIE_EXPIRATION,
@@ -292,28 +292,28 @@ export class AuthController extends Api {
         await this._authService.getTokens(user);
 
       res.cookie('access_token', refresh_token, {
-        secure: true,
+        secure: !getConfig().isDev(),
         httpOnly: true,
         sameSite: 'none',
         maxAge: getConfig().JWT_ACCESS_TOKEN_COOKIE_EXPIRATION,
       });
 
       res.cookie('access_token_expires_at', access_token_expires_at, {
-        secure: true,
+        secure: !getConfig().isDev(),
         httpOnly: true,
         sameSite: 'none',
         maxAge: getConfig().JWT_ACCESS_TOKEN_COOKIE_EXPIRATION,
       });
 
       res.cookie('refresh_token', refresh_token, {
-        secure: true,
+        secure: !getConfig().isDev(),
         httpOnly: true,
         sameSite: 'none',
         maxAge: getConfig().JWT_REFRESH_TOKEN_COOKIE_EXPIRATION,
       });
 
       res.cookie('refresh_token_expires_at', refresh_token_expires_at, {
-        secure: true,
+        secure: !getConfig().isDev(),
         httpOnly: true,
         sameSite: 'none',
         maxAge: getConfig().JWT_REFRESH_TOKEN_COOKIE_EXPIRATION,

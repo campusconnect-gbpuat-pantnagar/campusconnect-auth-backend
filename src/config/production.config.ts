@@ -41,4 +41,7 @@ export const productionConfig: Config = {
   JWT_REFRESH_TOKEN_EXPIRATION: String(process.env.JWT_REFRESH_TOKEN_EXPIRATION),
   JWT_REFRESH_TOKEN_COOKIE_EXPIRATION: Number(process.env.JWT_REFRESH_TOKEN_COOKIE_EXPIRATION),
   OTP_EXPIRE_IN_TIME: Number(process.env.OTP_EXPIRE_IN_TIME),
+  isDev: function () {
+    return this.env === 'development';
+  },
 };

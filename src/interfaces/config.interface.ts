@@ -43,4 +43,5 @@ export interface Config {
   JWT_REFRESH_TOKEN_COOKIE_EXPIRATION: number;
 
   OTP_EXPIRE_IN_TIME: number;
+  isDev: () => boolean;
 }
