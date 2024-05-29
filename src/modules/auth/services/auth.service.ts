@@ -52,7 +52,7 @@ export class AuthService {
       const minWaitTime = 90;
       const randomWaitTime = Math.floor(Math.random() * (maxWaitTime - minWaitTime) + minWaitTime);
       await new Promise((resolve) => setTimeout(resolve, randomWaitTime)); // will wait randomly for the chosen time to sync response time
-      throw new ApiError(HttpStatusCode.UNAUTHORIZED, 'Invalid username or password');
+      throw new ApiError(HttpStatusCode.BAD_REQUEST, 'Invalid username or password');
     }
     const isMatched = await user.isPasswordMatch(password);
     if (!isMatched) {
@@ -62,18 +62,18 @@ export class AuthService {
       if (remainingAttempts === 0 && user.failedLogin) {
         const blockedMinutesLeft = this.getBlockedMinutesLeft(user.failedLogin.lastFailedAttempt);
         throw new ApiError(
-          HttpStatusCode.UNAUTHORIZED,
+          HttpStatusCode.BAD_REQUEST,
           `Account blocked, Please try again after ${blockedMinutesLeft} minutes`,
         );
       }
 
       if (remainingAttempts < 3) {
         throw new ApiError(
-          HttpStatusCode.UNAUTHORIZED,
+          HttpStatusCode.BAD_REQUEST,
           `Incorrect email or password provided. ${remainingAttempts} Attempts left`,
         );
       }
-      throw new ApiError(HttpStatusCode.UNAUTHORIZED, 'Invalid username or password');
+      throw new ApiError(HttpStatusCode.BAD_REQUEST, 'Invalid username or password');
     }
     return user;
   }
