@@ -39,6 +39,7 @@ export interface IUser {
 
   // Account Status
   isDeleted?: boolean;
+  accountDeletionReason?: string;
   isTemporaryBlocked?: boolean;
   isPermanentBlocked?: boolean;
   lastActive: Date;
