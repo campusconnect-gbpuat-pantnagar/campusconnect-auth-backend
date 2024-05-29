@@ -153,6 +153,7 @@ const userSchema = new mongoose.Schema<IUserDoc, IUserModel>(
     },
     showOnBoarding: {
       type: Boolean,
+      default: true,
     },
     role: {
       type: String,
