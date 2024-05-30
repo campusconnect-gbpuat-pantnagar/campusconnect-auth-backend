@@ -90,5 +90,6 @@ export type NewRegisteredUser = Omit<
   | 'showOnBoardingTour'
   | 'isPermanentBlocked'
   | 'isTemporaryBlocked'
+  | 'accountDeletionReason'
 >;
 export type NewCreatedUser = Omit<IUser, 'isEmailVerified'>;
