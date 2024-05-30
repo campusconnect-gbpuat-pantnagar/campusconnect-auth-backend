@@ -8,3 +8,11 @@ export interface VerifyOtpJob {
     name: string;
   };
 }
+
+export interface WelcomeEmailJob {
+  pattern: QueueEventJobPattern.WELCOME_EMAIL;
+  data: {
+    email: string;
+    name: string;
+  };
+}

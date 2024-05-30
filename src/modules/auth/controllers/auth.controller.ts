@@ -8,16 +8,20 @@ import { HttpStatusCode } from '@/enums';
 import ApiError from '@/exceptions/http.exception';
 import { addDays, format } from 'date-fns';
 import { CryptoService } from '@/helpers/crypto.service';
+import { Queue } from 'bullmq';
+import { EMAIL_APP_NOTIFICATION_QUEUE } from '@/queues/app.notification.queue';
+import { JobPriority, QueueEventJobPattern, WelcomeEmailJob } from '@/queues';
 
 export class AuthController extends Api {
   private readonly _userService: UserService;
   private readonly _authService: AuthService;
-
+  private readonly EMAIL_APP_NOTIFICATION_QUEUE: Queue;
   constructor() {
     super();
 
     this._userService = new UserService();
     this._authService = new AuthService();
+    this.EMAIL_APP_NOTIFICATION_QUEUE = EMAIL_APP_NOTIFICATION_QUEUE;
   }
 
   public registerUser: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
@@ -185,6 +189,17 @@ export class AuthController extends Api {
       const { gbpuatEmail, otp } = req.body;
       // console.log(gbpuatEmail, otp);
       const user = await this._authService.verifyEmail(gbpuatEmail, otp);
+      const eventData: WelcomeEmailJob['data'] = {
+        name: user?.firstName!,
+        email: user?.gbpuatEmail!,
+      };
+
+      // adding welcome email event
+      await this.EMAIL_APP_NOTIFICATION_QUEUE.add(
+        QueueEventJobPattern.WELCOME_EMAIL,
+        { ...eventData },
+        { priority: JobPriority.MEDIUM_HIGH },
+      );
       // if  verified then send tokens
       // ✅ TODO: Implement tokens functionality
       const { access_token, access_token_expires_at, refresh_token, refresh_token_expires_at } =
