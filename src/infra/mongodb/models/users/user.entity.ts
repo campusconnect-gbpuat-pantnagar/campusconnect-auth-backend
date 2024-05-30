@@ -39,7 +39,7 @@ export interface IUser {
 
   // Account Status
   isDeleted?: boolean;
-  accountDeletionReason?: string;
+  // accountDeletionReason?: string;
   isTemporaryBlocked?: boolean;
   isPermanentBlocked?: boolean;
   lastActive: Date;
@@ -90,6 +90,5 @@ export type NewRegisteredUser = Omit<
   | 'showOnBoardingTour'
   | 'isPermanentBlocked'
   | 'isTemporaryBlocked'
-  | 'accountDeletionReason'
 >;
 export type NewCreatedUser = Omit<IUser, 'isEmailVerified'>;

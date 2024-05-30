@@ -87,11 +87,11 @@ const userSchema = new mongoose.Schema<IUserDoc, IUserModel>(
       required: true,
       default: false,
     },
-    accountDeletionReason: {
-      type: String,
-      required: true,
-      default: null,
-    },
+    // accountDeletionReason: {
+    //   type: String,
+    //   required: true,
+    //   default: null,
+    // },
     lastActive: {
       type: Date,
       default: Date.now,
