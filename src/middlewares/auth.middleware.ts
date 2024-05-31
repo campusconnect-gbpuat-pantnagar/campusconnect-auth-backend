@@ -47,6 +47,7 @@ export async function AuthMiddleware(req: Request, res: Response, next: NextFunc
       status: globalConstants.status.failed,
       message: (err as Error).message,
       data: null,
+      statusCode: globalConstants.statusCode.UnauthorizedException.code,
     });
   }
 }
