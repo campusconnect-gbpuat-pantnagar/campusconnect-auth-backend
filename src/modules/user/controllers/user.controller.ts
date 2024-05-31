@@ -397,4 +397,31 @@ export class UserController extends Api {
       next(err);
     }
   };
+
+  public getUserNetwork: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.user!.id;
+
+      const user = await this._userService.getUserById(userId);
+      if (!user) {
+        throw new ApiError(HttpStatusCode.FORBIDDEN, 'User Not found ');
+      }
+
+      if (user?.isDeleted) {
+        throw new ApiError(HttpStatusCode.BAD_REQUEST, 'Account has been deleted..');
+      }
+
+      this.send(
+        res,
+        {
+          receivedConnections: user.receivedConnections,
+          sentConnections: user.sentConnections,
+          connectionLists: user.connectionLists,
+        },
+        `get user network`,
+      );
+    } catch (err) {
+      next(err);
+    }
+  };
 }

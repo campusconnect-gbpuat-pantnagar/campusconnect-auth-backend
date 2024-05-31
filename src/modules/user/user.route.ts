@@ -87,7 +87,7 @@ export class UserRoute implements Route {
     this.router.post(`${this.path}/account-deletion`, AuthMiddleware, this.userController.setAccountDeletion);
 
     // route for getting users connectionLists,receivedConnections,sentConnections for my network page
-    // this.router.get(`${this.path}/my-network`, AuthMiddleware, this.userController.getUserNetwork);
+    this.router.get(`${this.path}/my-network`, AuthMiddleware, this.userController.getUserNetwork);
 
     // route for update user account
     // this.router.patch(`${this.path}/account`, AuthMiddleware, this.userController.updateUserAccount);
