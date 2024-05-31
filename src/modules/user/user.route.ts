@@ -47,24 +47,24 @@ export class UserRoute implements Route {
       this.userController.getUserPresence,
     );
 
-    // ✅ TODO: Implement route for sending connections request to user
+    //  route for sending connections request to user
     this.router.post(`${this.path}/send-connection/:userId`, AuthMiddleware, this.userController.sendConnectionRequest);
 
-    // ✅ TODO: Implement route for accepting connections request of user
+    //  route for accepting connections request of user
     this.router.post(
       `${this.path}/accept-connection/:userId`,
       AuthMiddleware,
       this.userController.acceptConnectionRequest,
     );
 
-    // ✅ TODO: Implement route for rejecting connections request of user
+    //  route for rejecting connections request of user
     this.router.post(
       `${this.path}/reject-connection/:userId`,
       AuthMiddleware,
       this.userController.rejectConnectionRequest,
     );
 
-    //  ✅ TODO: Implement route for removing connections request of user
+    //    route for removing connections request of user
     this.router.post(`${this.path}/remove-connection/:userId`, AuthMiddleware, this.userController.removeConnection);
   }
 }
