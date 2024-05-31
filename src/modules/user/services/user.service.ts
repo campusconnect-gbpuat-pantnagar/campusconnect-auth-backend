@@ -90,6 +90,24 @@ export class UserService {
       .exec();
     return updatedUser ? updatedUser.toJSON() : null;
   }
+  /**
+   * update User by Id
+   * @param {userId}
+   * @param {update}
+   * @returns {Promise<IUserDoc | null>}
+   */
+  public async updateUserById(
+    userId: mongoose.Types.ObjectId,
+    update: UpdateQuery<IUserDoc>,
+  ): Promise<IUserDoc | null> {
+    const updatedUser = await this._user.findByIdAndUpdate(
+      userId,
+      update,
+      { new: true, useFindAndModify: false }, // This option returns the updated document
+    );
+
+    return updatedUser;
+  }
 
   /**
    * Update the User last Active timestamp in the database

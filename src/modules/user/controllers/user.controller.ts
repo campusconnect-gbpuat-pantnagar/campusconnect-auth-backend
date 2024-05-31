@@ -7,7 +7,7 @@ import { RedisService } from '@/infra/redis/redis.service';
 import { REDIS_ENUM, REDIS_TTL_ENUM } from '@/utils/redis.constants';
 import { IUser, IUserDoc, NewRegisteredUser } from '@/infra/mongodb/models';
 import { UserService } from '../services/user.service';
-import mongoose, { Mongoose } from 'mongoose';
+import mongoose, { isValidObjectId, Mongoose } from 'mongoose';
 import ApiError from '@/exceptions/http.exception';
 import { HttpStatusCode } from '@/enums';
 
@@ -181,21 +181,87 @@ export class UserController extends Api {
   // Implement controller for sending connection request of user
   public sendConnectionRequest: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     try {
+      const { userId } = req.params;
+      const currentUserId = req.user!.id;
+      if (!isValidObjectId(userId)) {
+        throw new ApiError(HttpStatusCode.BAD_REQUEST, `Invalid User Id`);
+      }
+      if (userId === currentUserId) {
+        throw new ApiError(HttpStatusCode.BAD_REQUEST, `Operations not allowed`);
+      }
+      const user = await this._userService.getUserById(new mongoose.Types.ObjectId(userId));
+      if (!user) {
+        throw new ApiError(HttpStatusCode.NOT_FOUND, `User not found. `);
+      }
+
+      const updatedCurrentUser = await this._userService.updateUserById(new mongoose.Types.ObjectId(currentUserId), {
+        $addToSet: { sentConnections: { userId } },
+      });
+      const updatedUser = await this._userService.updateUserById(new mongoose.Types.ObjectId(userId), {
+        $addToSet: { receivedConnections: { userId: currentUserId } },
+      });
+      console.log(updatedCurrentUser, updatedUser);
+      // TODO ✅ : Trigger an event for sending connection requests so that email notifications should be sent
+      this.send(res, null, `connection request sent successfully`);
     } catch (err) {
       next(err);
     }
   };
+
   // Implement controller for accepting connection request of user
   public acceptConnectionRequest: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     try {
+      const { userId } = req.params;
+      const currentUserId = req.user!.id;
+      if (!isValidObjectId(userId)) {
+        throw new ApiError(HttpStatusCode.BAD_REQUEST, `Invalid User Id`);
+      }
+      if (userId === currentUserId) {
+        throw new ApiError(HttpStatusCode.BAD_REQUEST, `Operations not allowed`);
+      }
+      const user = await this._userService.getUserById(new mongoose.Types.ObjectId(userId));
+      if (!user) {
+        throw new ApiError(HttpStatusCode.NOT_FOUND, `User not found. `);
+      }
+
+      const updatedCurrentUser = await this._userService.updateUserById(new mongoose.Types.ObjectId(currentUserId), {
+        $pull: { receivedConnections: { userId } },
+        $addToSet: { connectionLists: { userId } },
+      });
+      const updatedUser = await this._userService.updateUserById(new mongoose.Types.ObjectId(userId), {
+        $pull: { sentConnections: { userId: currentUserId } },
+        $addToSet: { connectionLists: { userId: currentUserId } },
+      });
+      // TODO ✅ : Trigger an event for accepting connection requests so that email notifications should be sent to users
+      this.send(res, null, `connection request accepted successfully.`);
     } catch (err) {
       next(err);
     }
   };
-  // Implement controller for rejecting connection request of user
 
+  // Implement controller for rejecting connection request of user
   public rejectConnectionRequest: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     try {
+      const { userId } = req.params;
+      const currentUserId = req.user!.id;
+      if (!isValidObjectId(userId)) {
+        throw new ApiError(HttpStatusCode.BAD_REQUEST, `Invalid User Id`);
+      }
+      if (userId === currentUserId) {
+        throw new ApiError(HttpStatusCode.BAD_REQUEST, `Operations not allowed`);
+      }
+      const user = await this._userService.getUserById(new mongoose.Types.ObjectId(userId));
+      if (!user) {
+        throw new ApiError(HttpStatusCode.NOT_FOUND, `User not found. `);
+      }
+
+      const updatedCurrentUser = await this._userService.updateUserById(new mongoose.Types.ObjectId(currentUserId), {
+        $pull: { receivedConnections: { userId } },
+      });
+      const updatedUser = await this._userService.updateUserById(new mongoose.Types.ObjectId(userId), {
+        $pull: { sentConnections: { userId: currentUserId } },
+      });
+      this.send(res, null, `connection request rejected successfully..`);
     } catch (err) {
       next(err);
     }

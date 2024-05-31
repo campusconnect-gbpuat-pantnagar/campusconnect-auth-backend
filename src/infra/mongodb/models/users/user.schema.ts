@@ -168,6 +168,7 @@ const userSchema = new mongoose.Schema<IUserDoc, IUserModel>(
     },
     receivedConnections: [
       {
+        _id: false,
         userId: {
           type: mongoose.Schema.Types.ObjectId,
           ref: 'User',
@@ -176,6 +177,7 @@ const userSchema = new mongoose.Schema<IUserDoc, IUserModel>(
     ],
     sentConnections: [
       {
+        _id: false,
         userId: {
           type: mongoose.Schema.Types.ObjectId,
           ref: 'User',
@@ -184,6 +186,7 @@ const userSchema = new mongoose.Schema<IUserDoc, IUserModel>(
     ],
     connectionLists: [
       {
+        _id: false,
         userId: {
           type: mongoose.Schema.Types.ObjectId,
           ref: 'User',

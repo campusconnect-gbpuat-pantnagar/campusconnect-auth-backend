@@ -38,7 +38,7 @@ export class UserRoute implements Route {
       this.boomarkController.removeUserBookmarks,
     );
 
-    this.router.get(`${this.path}/presence`, AuthMiddleware, this.userController.updateUserPresence);
+    this.router.post(`${this.path}/presence`, AuthMiddleware, this.userController.updateUserPresence);
 
     this.router.get(
       `${this.path}/presence/:username`,
