@@ -111,7 +111,10 @@ export class AuthService {
 
     return user;
   }
-  public async addUsernameToRedis(username: string, userBody: Pick<NewRegisteredUser, 'gbpuatEmail' | 'gbpuatId'>) {
+  public async addUsernameToRedis(
+    username: string,
+    userBody: Pick<IUserDoc, 'gbpuatEmail' | 'firstName' | 'lastName' | 'profilePicture' | 'username' | 'gbpuatId'>,
+  ) {
     await this._redisService1.set(`${REDIS_ENUM.USERNAME_AVAILABLE}`, `${username}`, JSON.stringify({ ...userBody }));
   }
   public async isUsernameAvailable(username: string) {

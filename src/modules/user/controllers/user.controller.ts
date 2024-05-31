@@ -11,14 +11,17 @@ import mongoose, { isValidObjectId, Mongoose } from 'mongoose';
 import ApiError from '@/exceptions/http.exception';
 import { HttpStatusCode } from '@/enums';
 import { addDays, format } from 'date-fns';
+import { AuthService } from '@/modules/auth/services/auth.service';
 
 export class UserController extends Api {
   private readonly _redisService1: RedisService;
   private readonly _userService: UserService;
+  private readonly _authService: AuthService;
   constructor() {
     super();
     this._redisService1 = new RedisService(redisClient1);
     this._userService = new UserService();
+    this._authService = new AuthService();
   }
 
   public getUserPresence: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
@@ -453,6 +456,17 @@ export class UserController extends Api {
         firstName,
         profilePicture,
       });
+
+      if (updateUser?.username) {
+        await this._authService.addUsernameToRedis(updateUser.username, {
+          gbpuatId: updateUser.gbpuatId,
+          gbpuatEmail: updateUser.gbpuatEmail,
+          username: updateUser.username,
+          firstName: updateUser.firstName,
+          lastName: updateUser.lastName,
+          profilePicture: updateUser.profilePicture,
+        });
+      }
 
       this.send(res, { user: updateUser }, `user details updated.`);
     } catch (err) {

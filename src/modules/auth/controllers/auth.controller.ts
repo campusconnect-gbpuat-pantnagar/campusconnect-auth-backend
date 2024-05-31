@@ -31,6 +31,10 @@ export class AuthController extends Api {
         await this._authService.addUsernameToRedis(user.username, {
           gbpuatId: user.gbpuatId,
           gbpuatEmail: user.gbpuatEmail,
+          username: user.username,
+          firstName: user.firstName,
+          profilePicture: user.profilePicture,
+          lastName: user.lastName,
         });
       }
       // ✅ TODO: Implement  for sending the email notification  for verification of user email
