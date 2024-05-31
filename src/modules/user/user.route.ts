@@ -12,6 +12,7 @@ import { acceptConnectionDto } from './dtos/accept-connection.dto';
 import { rejectConnectionDto } from './dtos/reject-connection.dto';
 import { removeConnectionDto } from './dtos/remove-connection.dto';
 import { accountDeletionDto } from './dtos/account-deletion.dto';
+import { updateAccountDto } from './dtos/update-account.dto';
 
 export class UserRoute implements Route {
   public readonly path = '/users';
@@ -85,13 +86,23 @@ export class UserRoute implements Route {
     );
 
     //    route for setting account for deletion period
-    this.router.post(`${this.path}/account-deletion`, AuthMiddleware, validate(accountDeletionDto),this.userController.setAccountDeletion);
+    this.router.post(
+      `${this.path}/account-deletion`,
+      AuthMiddleware,
+      validate(accountDeletionDto),
+      this.userController.setAccountDeletion,
+    );
 
     // route for getting users connectionLists,receivedConnections,sentConnections for my network page
     this.router.get(`${this.path}/my-network`, AuthMiddleware, this.userController.getUserNetwork);
 
     // route for update user account
-    // this.router.patch(`${this.path}/account`, AuthMiddleware, this.userController.updateUserAccount);
+    this.router.patch(
+      `${this.path}/account`,
+      AuthMiddleware,
+      validate(updateAccountDto),
+      this.userController.updateUserAccount,
+    );
 
     // route for connections suggestion
     // this.router.get(`${this.path}/suggestions`, AuthMiddleware, this.userController.getConnectionsSuggestions);

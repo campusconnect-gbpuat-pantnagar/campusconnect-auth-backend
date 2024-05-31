@@ -431,4 +431,32 @@ export class UserController extends Api {
       next(err);
     }
   };
+
+  public updateUserAccount: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.user!.id;
+      const { profilePicture, firstName, lastName, username, bio } = req.body;
+
+      const user = await this._userService.getUserById(userId);
+      if (!user) {
+        throw new ApiError(HttpStatusCode.FORBIDDEN, 'User Not found ');
+      }
+
+      if (user?.isDeleted) {
+        throw new ApiError(HttpStatusCode.BAD_REQUEST, 'Account has been deleted..');
+      }
+
+      const updateUser = await this._userService.updateUserById(userId, {
+        username,
+        bio,
+        lastName,
+        firstName,
+        profilePicture,
+      });
+
+      this.send(res, { user: updateUser }, `user details updated.`);
+    } catch (err) {
+      next(err);
+    }
+  };
 }
