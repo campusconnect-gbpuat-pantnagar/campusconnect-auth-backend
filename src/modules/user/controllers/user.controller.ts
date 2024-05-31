@@ -10,6 +10,7 @@ import { UserService } from '../services/user.service';
 import mongoose, { isValidObjectId, Mongoose } from 'mongoose';
 import ApiError from '@/exceptions/http.exception';
 import { HttpStatusCode } from '@/enums';
+import { addDays, format } from 'date-fns';
 
 export class UserController extends Api {
   private readonly _redisService1: RedisService;
@@ -367,6 +368,31 @@ export class UserController extends Api {
         $pull: { connectionLists: { userId: currentUserId } },
       });
       this.send(res, null, `connection removed successfully..`);
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  public setAccountDeletion: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.user!.id;
+
+      const user = await this._userService.getUserById(userId);
+      if (!user) {
+        throw new ApiError(HttpStatusCode.FORBIDDEN, 'User Not found || Operation not allowed..');
+      }
+
+      const updatedUser = await this._userService.updateUserByGbpuatEmail(
+        { gbpuatEmail: user.gbpuatEmail },
+        {
+          isDeleted: true,
+        },
+      );
+      if (!updatedUser?.isDeleted) {
+        throw new ApiError(HttpStatusCode.BAD_REQUEST, 'Account deletion failed..');
+      }
+
+      this.send(res, null, `Your request to delete ${user.username} account was successful.`);
     } catch (err) {
       next(err);
     }

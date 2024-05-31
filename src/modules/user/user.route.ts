@@ -84,7 +84,7 @@ export class UserRoute implements Route {
     );
 
     //    route for setting account for deletion period
-    // this.router.post(`${this.path}/account-deletion`, AuthMiddleware, this.userController.setAccountDeletion);
+    this.router.post(`${this.path}/account-deletion`, AuthMiddleware, this.userController.setAccountDeletion);
 
     // route for getting users connectionLists,receivedConnections,sentConnections for my network page
     // this.router.get(`${this.path}/my-network`, AuthMiddleware, this.userController.getUserNetwork);
@@ -94,5 +94,8 @@ export class UserRoute implements Route {
 
     // route for connections suggestion
     // this.router.get(`${this.path}/suggestions`, AuthMiddleware, this.userController.getConnectionsSuggestions);
+
+    // route for searching the user
+    // this.router.get(`${this.path}/search/:username`, AuthMiddleware, this.userController.getUserByUsername);
   }
 }

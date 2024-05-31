@@ -66,7 +66,7 @@ export class AuthController extends Api {
           {
             user: { username: user.username, isDeleted: user.isDeleted, gbpuatEmail: user.gbpuatEmail },
           },
-          `Your requested to delete ${user.username}. If you want to keep it, you have until ${formattedDate} to let us know. Otherwise, all your information will be deleted.`,
+          `You requested to delete ${user.username}. If you want to keep it, you have until ${formattedDate} to let us know. Otherwise, all your information will be deleted.`,
         );
       }
 
