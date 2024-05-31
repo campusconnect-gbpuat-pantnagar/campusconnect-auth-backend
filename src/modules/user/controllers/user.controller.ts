@@ -194,13 +194,38 @@ export class UserController extends Api {
         throw new ApiError(HttpStatusCode.NOT_FOUND, `User not found. `);
       }
 
+      const currentUser = await this._userService.getUserById(new mongoose.Types.ObjectId(currentUserId));
+      if (!currentUser) {
+        throw new ApiError(HttpStatusCode.FORBIDDEN, `Current user not found.`);
+      }
+      // Check if the users are already connected
+      const alreadyConnected =
+        currentUser.connectionLists.some((connection) => connection.userId.toString() === userId) &&
+        user.connectionLists.some((connection) => connection.userId.toString() === currentUserId);
+
+      if (alreadyConnected) {
+        throw new ApiError(HttpStatusCode.BAD_REQUEST, `Users are already connected.`);
+      }
+
+      const alreadySentConnection = currentUser.sentConnections.some(
+        (connection) => connection.userId.toString() === userId,
+      );
+
+      const alreadyReceivedConnection = user.receivedConnections.some(
+        (connection) => connection.userId.toString() === currentUserId,
+      );
+
+      if (alreadySentConnection || alreadyReceivedConnection) {
+        throw new ApiError(HttpStatusCode.BAD_REQUEST, `Connection request already sent or received.`);
+      }
+
       const updatedCurrentUser = await this._userService.updateUserById(new mongoose.Types.ObjectId(currentUserId), {
         $addToSet: { sentConnections: { userId } },
       });
       const updatedUser = await this._userService.updateUserById(new mongoose.Types.ObjectId(userId), {
         $addToSet: { receivedConnections: { userId: currentUserId } },
       });
-      console.log(updatedCurrentUser, updatedUser);
+
       // TODO ✅ : Trigger an event for sending connection requests so that email notifications should be sent
       this.send(res, null, `connection request sent successfully`);
     } catch (err) {
@@ -222,6 +247,28 @@ export class UserController extends Api {
       const user = await this._userService.getUserById(new mongoose.Types.ObjectId(userId));
       if (!user) {
         throw new ApiError(HttpStatusCode.NOT_FOUND, `User not found. `);
+      }
+      const currentUser = await this._userService.getUserById(new mongoose.Types.ObjectId(currentUserId));
+      if (!currentUser) {
+        throw new ApiError(HttpStatusCode.FORBIDDEN, `Current user not found.`);
+      }
+      // Check if the users are already connected
+      const alreadyConnected =
+        currentUser.connectionLists.some((connection) => connection.userId.toString() === userId) &&
+        user.connectionLists.some((connection) => connection.userId.toString() === currentUserId);
+
+      if (alreadyConnected) {
+        throw new ApiError(HttpStatusCode.BAD_REQUEST, `Users are already connected.`);
+      }
+
+      // Check if the connection request exists
+      const receivedConnection = currentUser.receivedConnections.some(
+        (connection) => connection.userId.toString() === userId,
+      );
+      const sentConnection = user.sentConnections.some((connection) => connection.userId.toString() === currentUserId);
+
+      if (!receivedConnection || !sentConnection) {
+        throw new ApiError(HttpStatusCode.BAD_REQUEST, `No connection request found.`);
       }
 
       const updatedCurrentUser = await this._userService.updateUserById(new mongoose.Types.ObjectId(currentUserId), {
@@ -254,6 +301,19 @@ export class UserController extends Api {
       if (!user) {
         throw new ApiError(HttpStatusCode.NOT_FOUND, `User not found. `);
       }
+      const currentUser = await this._userService.getUserById(new mongoose.Types.ObjectId(currentUserId));
+      if (!currentUser) {
+        throw new ApiError(HttpStatusCode.FORBIDDEN, `Current user not found.`);
+      }
+      // Check if the connection request exists
+      const receivedConnection = currentUser.receivedConnections.some(
+        (connection) => connection.userId.toString() === userId,
+      );
+      const sentConnection = user.sentConnections.some((connection) => connection.userId.toString() === currentUserId);
+
+      if (!receivedConnection || !sentConnection) {
+        throw new ApiError(HttpStatusCode.BAD_REQUEST, `No connection request found.`);
+      }
 
       const updatedCurrentUser = await this._userService.updateUserById(new mongoose.Types.ObjectId(currentUserId), {
         $pull: { receivedConnections: { userId } },
@@ -270,6 +330,39 @@ export class UserController extends Api {
 
   public removeConnection: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     try {
+      const { userId } = req.params;
+      const currentUserId = req.user!.id;
+      if (!isValidObjectId(userId)) {
+        throw new ApiError(HttpStatusCode.BAD_REQUEST, `Invalid User Id`);
+      }
+      if (userId === currentUserId) {
+        throw new ApiError(HttpStatusCode.BAD_REQUEST, `Operations not allowed`);
+      }
+      const user = await this._userService.getUserById(new mongoose.Types.ObjectId(userId));
+      if (!user) {
+        throw new ApiError(HttpStatusCode.NOT_FOUND, `User not found. `);
+      }
+      const currentUser = await this._userService.getUserById(new mongoose.Types.ObjectId(currentUserId));
+      if (!currentUser) {
+        throw new ApiError(HttpStatusCode.FORBIDDEN, `Current user not found.`);
+      }
+
+      // Check if the users are actually connected
+      const isConnected =
+        currentUser.connectionLists.some((connection) => connection.userId.toString() === userId) &&
+        user.connectionLists.some((connection) => connection.userId.toString() === currentUserId);
+
+      if (!isConnected) {
+        throw new ApiError(HttpStatusCode.BAD_REQUEST, `Users are not connected.`);
+      }
+
+      const updatedCurrentUser = await this._userService.updateUserById(new mongoose.Types.ObjectId(currentUserId), {
+        $pull: { connectionLists: { userId } },
+      });
+      const updatedUser = await this._userService.updateUserById(new mongoose.Types.ObjectId(userId), {
+        $pull: { connectionLists: { userId: currentUserId } },
+      });
+      this.send(res, null, `connection removed successfully..`);
     } catch (err) {
       next(err);
     }
