@@ -24,6 +24,7 @@ export interface Config {
     host: string;
     port: number;
   };
+  BACKEND_URL: string;
   log: {
     format: 'combined' | 'common' | 'dev' | 'short' | 'tiny';
     level: 'error' | 'warn' | 'info' | 'http' | 'debug';

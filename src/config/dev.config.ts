@@ -23,6 +23,7 @@ export const devConfig: Config = {
     host: String(process.env.HOST) || 'localhost',
     port: Number(process.env.PORT) || 8080,
   },
+  BACKEND_URL: String(process.env.BACKEND_URL),
   log: {
     format: 'dev',
     level: 'debug',

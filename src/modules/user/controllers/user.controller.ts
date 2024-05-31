@@ -12,16 +12,20 @@ import ApiError from '@/exceptions/http.exception';
 import { HttpStatusCode } from '@/enums';
 import { addDays, format } from 'date-fns';
 import { AuthService } from '@/modules/auth/services/auth.service';
+import { Queue } from 'bullmq';
+import { AccountDeletionJob, EMAIL_AUTH_NOTIFICATION_QUEUE, JobPriority, QueueEventJobPattern } from '@/queues';
 
 export class UserController extends Api {
   private readonly _redisService1: RedisService;
   private readonly _userService: UserService;
   private readonly _authService: AuthService;
+  private readonly EMAIL_AUTH_NOTIFICATION_QUEUE: Queue;
   constructor() {
     super();
     this._redisService1 = new RedisService(redisClient1);
     this._userService = new UserService();
     this._authService = new AuthService();
+    this.EMAIL_AUTH_NOTIFICATION_QUEUE = EMAIL_AUTH_NOTIFICATION_QUEUE;
   }
 
   public getUserPresence: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
@@ -401,6 +405,25 @@ export class UserController extends Api {
       if (!updatedUser?.isDeleted) {
         throw new ApiError(HttpStatusCode.BAD_REQUEST, 'Account deletion failed..');
       }
+      const accountDeletedDate = addDays(new Date(updatedUser.lastActive), 30);
+
+      // ✅TODO : Implementation for account recovery link
+
+      // Format the date as "Month date, year"
+      const formattedDate = format(accountDeletedDate, 'MMMM d, yyyy');
+      const eventData: AccountDeletionJob['data'] = {
+        email: updatedUser.gbpuatEmail,
+        username: user.username,
+        date: formattedDate,
+        keepAccountLink: `${getConfig().BACKEND_URL}/api/v1/auth/keep-account/${updatedUser.username}?recoveryToken=${Math.random().toString(36).substring(2)}`,
+      };
+
+      //  trigger a email notification event for account deletion
+      await this.EMAIL_AUTH_NOTIFICATION_QUEUE.add(
+        QueueEventJobPattern.ACCOUNT_DELETION_EMAIL,
+        { ...eventData },
+        { priority: JobPriority.HIGHEST },
+      );
 
       this.send(res, null, `Your request to delete ${user.username} account was successful.`);
     } catch (err) {

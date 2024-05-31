@@ -24,6 +24,7 @@ export const productionConfig: Config = {
     host: String(process.env.HOST),
     port: Number(process.env.PORT) || 5000,
   },
+  BACKEND_URL: String(process.env.BACKEND_URL),
   log: {
     format: 'tiny',
     level: 'info',
