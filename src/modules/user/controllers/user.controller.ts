@@ -69,6 +69,10 @@ export class UserController extends Api {
         throw new ApiError(HttpStatusCode.FORBIDDEN, 'Unable to find user');
       }
 
+      if (user.isDeleted) {
+        throw new ApiError(HttpStatusCode.FORBIDDEN, 'User account has deleted.');
+      }
+
       const userLastActivePresenceInRedis = await this._redisService1.get(REDIS_ENUM.USERNAME_PRESENCE, userId);
       let userPresenceDetails:
         | (Pick<IUserDoc, 'gbpuatEmail' | 'gbpuatId' | 'lastActive'> & { mongoLastActivePresence?: string })

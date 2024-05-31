@@ -12,7 +12,7 @@ import ApiError from '@/exceptions/http.exception';
 import { HttpStatusCode } from '@/enums';
 import { BookmarkService } from '@/modules/bookmark/bookmark.service';
 
-export class BoomarkController extends Api {
+export class BookmarkController extends Api {
   private readonly _redisService1: RedisService;
   private readonly _bookmarkService: BookmarkService;
   constructor() {
