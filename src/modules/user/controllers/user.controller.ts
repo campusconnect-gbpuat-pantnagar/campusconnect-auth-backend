@@ -178,4 +178,34 @@ export class UserController extends Api {
       next(err);
     }
   };
+  // Implement controller for sending connection request of user
+  public sendConnectionRequest: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+    } catch (err) {
+      next(err);
+    }
+  };
+  // Implement controller for accepting connection request of user
+  public acceptConnectionRequest: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+    } catch (err) {
+      next(err);
+    }
+  };
+  // Implement controller for rejecting connection request of user
+
+  public rejectConnectionRequest: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+    } catch (err) {
+      next(err);
+    }
+  };
+  // Implement controller for removing connection request from user connectionList
+
+  public removeConnection: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+    } catch (err) {
+      next(err);
+    }
+  };
 }
