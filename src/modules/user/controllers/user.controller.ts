@@ -377,15 +377,22 @@ export class UserController extends Api {
     try {
       const userId = req.user!.id;
 
+      const { password, accountDeletionReason } = req.body;
       const user = await this._userService.getUserById(userId);
       if (!user) {
         throw new ApiError(HttpStatusCode.FORBIDDEN, 'User Not found || Operation not allowed..');
+      }
+
+      const isMatched = await user.isPasswordMatch(password);
+      if (!isMatched) {
+        throw new ApiError(HttpStatusCode.UNAUTHORIZED, 'invalid password..');
       }
 
       const updatedUser = await this._userService.updateUserByGbpuatEmail(
         { gbpuatEmail: user.gbpuatEmail },
         {
           isDeleted: true,
+          accountDeletionReason,
         },
       );
       if (!updatedUser?.isDeleted) {
