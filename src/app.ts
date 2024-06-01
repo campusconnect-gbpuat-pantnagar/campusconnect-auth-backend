@@ -14,6 +14,7 @@ import morgan from './lib/morgan';
 import { checkQueueReadiness, EMAIL_AUTH_NOTIFICATION_QUEUE } from './queues';
 import { bullboardServerAdapter } from './queues/bull-board';
 import { EMAIL_APP_NOTIFICATION_QUEUE } from './queues/app.notification.queue';
+import { CONTENT_MODERATION_QUEUE } from './queues/content-moderation.queue';
 
 export class App {
   public app: express.Application;
@@ -94,6 +95,7 @@ export class App {
       await Promise.all([
         checkQueueReadiness(EMAIL_AUTH_NOTIFICATION_QUEUE),
         checkQueueReadiness(EMAIL_APP_NOTIFICATION_QUEUE),
+        checkQueueReadiness(CONTENT_MODERATION_QUEUE),
       ]);
     } catch (error) {
       logger.error('Error initializing queues:', error);

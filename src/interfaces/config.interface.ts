@@ -19,6 +19,12 @@ export interface Config {
   REDIS_APP_NOTIFICATION_PORT: number;
   REDIS_APP_NOTIFICATION_USER: string;
   REDIS_APP_NOTIFICATION_PASS: string;
+
+  // redis config for content moderation queue  queue
+  REDIS_CONTENT_MODERATION_NOTIFICATION_HOST: string;
+  REDIS_CONTENT_MODERATION_NOTIFICATION_PORT: number;
+  REDIS_CONTENT_MODERATION_NOTIFICATION_USER: string;
+  REDIS_CONTENT_MODERATION_NOTIFICATION_PASS: string;
   server: {
     protocol: string;
     host: string;
