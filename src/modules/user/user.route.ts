@@ -13,6 +13,8 @@ import { rejectConnectionDto } from './dtos/reject-connection.dto';
 import { removeConnectionDto } from './dtos/remove-connection.dto';
 import { accountDeletionDto } from './dtos/account-deletion.dto';
 import { updateAccountDto } from './dtos/update-account.dto';
+import { getUserProfileByUsernameDto } from './dtos/get-user-profile-by-username.dto';
+import { getUserProfileByUserIdDto } from './dtos/get-user-profile-by-userId.dto';
 
 export class UserRoute implements Route {
   public readonly path = '/users';
@@ -26,8 +28,18 @@ export class UserRoute implements Route {
   }
   private initializeRoutes() {
     this.router.get(`${this.path}/me`, AuthMiddleware, this.userController.getCurrentUserProfile);
-    
-    this.router.get(`${this.path}/profile/:username`, this.userController.getUserProfile);
+
+    this.router.get(
+      `${this.path}/profile/:username`,
+      validate(getUserProfileByUsernameDto),
+      this.userController.getUserProfileByUsername,
+    );
+
+    this.router.get(
+      `${this.path}/profile/:userId`,
+      validate(getUserProfileByUserIdDto),
+      this.userController.getUserProfileByUserId,
+    );
 
     this.router.get(`${this.path}/bookmarks`, AuthMiddleware, this.bookmarkController.getUserBookmarks);
 

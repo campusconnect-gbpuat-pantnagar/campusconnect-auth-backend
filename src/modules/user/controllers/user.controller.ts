@@ -147,7 +147,7 @@ export class UserController extends Api {
     }
   };
 
-  public getUserProfile: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
+  public getUserProfileByUsername: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { username } = req.params;
       const user = await this._userService.getUserByUsername(username);
@@ -186,6 +186,49 @@ export class UserController extends Api {
         connectionLists: user.connectionLists,
       };
       this.send(res, { user: userData }, `${username} profile details`);
+    } catch (err) {
+      next(err);
+    }
+  };
+  public getUserProfileByUserId: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { userId } = req.params;
+      const user = await this._userService.getUserById(new mongoose.Types.ObjectId(userId));
+      // check is user is deleted or permanent block
+
+      if (!user || user?.isDeleted || user?.isPermanentBlocked) {
+        throw new ApiError(HttpStatusCode.BAD_REQUEST, `user with userId ${userId} not found. `);
+      }
+
+      const userData: Omit<IUser, 'password' | 'receivedConnections' | 'sentConnections'> & { id: string } = {
+        gbpuatId: user.gbpuatId,
+        username: user.username,
+        gbpuatEmail: user.gbpuatEmail,
+        isEmailVerified: user.isEmailVerified,
+        firstName: user.firstName,
+        academicDetails: {
+          college: {
+            name: user.academicDetails.college.name,
+            collegeId: user.academicDetails.college.collegeId,
+          },
+          department: {
+            name: user.academicDetails.department.name,
+            departmentId: user.academicDetails.department.departmentId,
+          },
+          degreeProgram: {
+            name: user.academicDetails.degreeProgram.name,
+            degreeProgramId: user.academicDetails.degreeProgram.degreeProgramId,
+          },
+          batchYear: user.academicDetails.batchYear,
+          designation: user.academicDetails.designation,
+        },
+        lastActive: user.lastActive,
+        profilePicture: user.profilePicture,
+        role: user.role,
+        id: user.id,
+        connectionLists: user.connectionLists,
+      };
+      this.send(res, { user: userData }, `${userId} profile details`);
     } catch (err) {
       next(err);
     }
