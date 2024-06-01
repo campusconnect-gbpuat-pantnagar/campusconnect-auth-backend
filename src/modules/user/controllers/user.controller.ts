@@ -173,6 +173,7 @@ export class UserController extends Api {
         gbpuatEmail: user.gbpuatEmail,
         isEmailVerified: user.isEmailVerified,
         firstName: user.firstName,
+        lastName: user.lastName,
         academicDetails: {
           college: {
             name: user.academicDetails.college.name,
