@@ -66,6 +66,13 @@ export class UserRoute implements Route {
       validate(sendConnectionDto),
       this.userController.sendConnectionRequest,
     );
+    //  route for withdraw connections request from user
+    this.router.post(
+      `${this.path}/withdraw-connection/:userId`,
+      AuthMiddleware,
+      validate(sendConnectionDto),
+      this.userController.withdrawConnectionRequest,
+    );
 
     //  route for accepting connections request of user
     this.router.post(

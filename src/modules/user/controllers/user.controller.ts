@@ -350,6 +350,47 @@ export class UserController extends Api {
       next(err);
     }
   };
+  // Implement controller for withdraw connection request of user
+  public withdrawConnectionRequest: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { userId } = req.params;
+      const currentUserId = req.user!.id;
+      if (!isValidObjectId(userId)) {
+        throw new ApiError(HttpStatusCode.BAD_REQUEST, `Invalid User Id`);
+      }
+      if (userId === currentUserId) {
+        throw new ApiError(HttpStatusCode.BAD_REQUEST, `Operations not allowed`);
+      }
+      const user = await this._userService.getUserById(new mongoose.Types.ObjectId(userId));
+      if (!user) {
+        throw new ApiError(HttpStatusCode.NOT_FOUND, `User not found. `);
+      }
+      const currentUser = await this._userService.getUserById(new mongoose.Types.ObjectId(currentUserId));
+      if (!currentUser) {
+        throw new ApiError(HttpStatusCode.FORBIDDEN, `Current user not found.`);
+      }
+      // Check if the connection request exists
+      const sentConnection = currentUser.sentConnections.some((connection) => connection.userId.toString() === userId);
+
+      const receivedConnection = user.receivedConnections.some(
+        (connection) => connection.userId.toString() === currentUserId,
+      );
+
+      if (!receivedConnection || !sentConnection) {
+        throw new ApiError(HttpStatusCode.BAD_REQUEST, `No connection request found.`);
+      }
+
+      const updatedCurrentUser = await this._userService.updateUserById(new mongoose.Types.ObjectId(currentUserId), {
+        $pull: { sentConnections: { userId } },
+      });
+      const updatedUser = await this._userService.updateUserById(new mongoose.Types.ObjectId(userId), {
+        $pull: { receivedConnections: { userId: currentUserId } },
+      });
+      this.send(res, null, `connection request withdraw successfully..`);
+    } catch (err) {
+      next(err);
+    }
+  };
   // Implement controller for removing connection request from user connectionList
 
   public removeConnection: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
@@ -546,7 +587,7 @@ export class UserController extends Api {
       }
 
       const receivedConnectionRequests = user.receivedConnections;
-      this.send(res, { sentConnections: receivedConnectionRequests }, `connection requests received list.`);
+      this.send(res, { receivedConnections: receivedConnectionRequests }, `connection requests received list.`);
     } catch (err) {
       next(err);
     }
