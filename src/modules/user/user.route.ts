@@ -111,7 +111,7 @@ export class UserRoute implements Route {
     );
 
     // route for connections suggestion
-    // this.router.get(`${this.path}/suggestions`, AuthMiddleware, this.userController.getConnectionsSuggestions);
+    this.router.get(`${this.path}/suggestions`, AuthMiddleware, this.userController.getConnectionsSuggestions);
 
     // route for searching the user
     // this.router.get(`${this.path}/search/:username`, AuthMiddleware, this.userController.getUserByUsername);

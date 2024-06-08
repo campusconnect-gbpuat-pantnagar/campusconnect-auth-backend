@@ -508,4 +508,15 @@ export class UserController extends Api {
       next(err);
     }
   };
+  public getConnectionsSuggestions: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.user!.id;
+
+      const newConnectionSuggestions = await this._userService.suggestConnections(userId);
+      // added the suggestion in redis
+      this.send(res, { newConnectionSuggestions }, `new connection suggestions.`);
+    } catch (err) {
+      next(err);
+    }
+  };
 }
