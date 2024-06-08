@@ -519,4 +519,36 @@ export class UserController extends Api {
       next(err);
     }
   };
+  public getUserSentConnectionRequests: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.user!.id;
+      const user = await this._userService.getUserById(userId);
+      if (!user) {
+        throw new ApiError(HttpStatusCode.FORBIDDEN, 'User Not found ');
+      }
+
+      const sentConnectionRequests = user.sentConnections;
+      this.send(res, { sentConnections: sentConnectionRequests }, `connection request sent lists.`);
+    } catch (err) {
+      next(err);
+    }
+  };
+  public getUserReceivedConnectionRequests: RequestHandler = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const userId = req.user!.id;
+      const user = await this._userService.getUserById(userId);
+      if (!user) {
+        throw new ApiError(HttpStatusCode.FORBIDDEN, 'User Not found ');
+      }
+
+      const receivedConnectionRequests = user.receivedConnections;
+      this.send(res, { sentConnections: receivedConnectionRequests }, `connection requests received list.`);
+    } catch (err) {
+      next(err);
+    }
+  };
 }
