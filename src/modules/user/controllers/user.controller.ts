@@ -194,6 +194,7 @@ export class UserController extends Api {
         profilePicture: user.profilePicture,
         role: user.role,
         id: user.id,
+        bio: user.bio,
         connectionLists: user.connectionLists,
       };
       this.send(res, { user: userData }, `${isObjectId ? 'User ID' : 'Username'} profile details`);
